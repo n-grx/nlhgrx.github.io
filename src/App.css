@@ -1,0 +1,26 @@
+.App {
+  width: 960px;
+  display: block;
+  margin: 0 auto;
+}
+
+#sidebar_left {
+  width: 299px;
+  float: left;
+}
+
+#main_content {
+  width: 661px;
+  float: left;
+}
+
+#main_content ul li span {
+  display: block;
+}
+
+#main_content ul li span:last-child {
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: grey;
+  font-size: 12px;
+}
