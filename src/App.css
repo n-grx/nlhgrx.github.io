@@ -1,7 +1,7 @@
 .app {
-  width: 960px;
+  width: 70%;
   display: block;
-  margin: 0 auto;
+  margin: 0% auto;
 }
 
 ul {
@@ -10,7 +10,13 @@ ul {
   padding: 0px;
 }
 
+.task-list {
+}
+
 .task {
+  margin: 0 0 16px 0;
+  padding: 0 0 16px 0;
+  border-bottom: 1px solid lightgrey;
 }
 
 ul li ul {
@@ -18,13 +24,19 @@ ul li ul {
 }
 
 .label {
-  font-size: 12px;
+  font-size: 8px;
+  margin: 8px 0 0 0;
 }
 
 .label li {
   float: left;
   padding: 1px 4px;
   border: 1px solid gray;
+  border-radius: 2px;
+}
+
+.label li:first-child {
+  margin: 0 8px 0 0;
 }
 
 .project {

@@ -1,7 +1,7 @@
 // Model - Talks to the db and the controller and knows how to modify data
 
 var express = require('express');
-var projects = require('../database/projects.json');
+var data = require('../database/projects.json');
 var app = express();
 var fs = require('fs');
 
@@ -14,8 +14,8 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('/projects', function(req, res, next) {
-  res.send(projects);
+app.get('/data', function(req, res, next) {
+  res.send(data);
 });
 
 // Need to add Add, Edit, Delete functionality
