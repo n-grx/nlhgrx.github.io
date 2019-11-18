@@ -24,7 +24,7 @@ ul li ul {
 }
 
 .label {
-  font-size: 8px;
+  font-size: 14px;
   margin: 8px 0 0 0;
 }
 
@@ -33,9 +33,6 @@ ul li ul {
   padding: 1px 4px;
   border: 1px solid gray;
   border-radius: 2px;
-}
-
-.label li:first-child {
   margin: 0 8px 0 0;
 }
 

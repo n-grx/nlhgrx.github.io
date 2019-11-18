@@ -5,7 +5,14 @@ class App extends Component {
   state = {
     isLoading: true,
     projects: [],
-    tasks: []
+    tasks: [],
+    taskInputValue: '',
+    testData: {
+      id: 123456,
+      value: 'This is a new task',
+      projects: 'OJB',
+      created: '2019-11-09T01:31:41Z'
+    }
   };
 
   componentDidMount() {
@@ -14,7 +21,7 @@ class App extends Component {
       Accept: 'application/json'
     });
 
-    fetch('http://localhost:5000/data', {
+    fetch('http://localhost:5000/api/gettasks', {
       headers: myHeaders
     })
       .then(response => {
@@ -25,7 +32,9 @@ class App extends Component {
       });
   }
 
+  // Calculate a score based on the tasks age
   calculateTaskAge = taskCreated => {
+    // get the age of the task in days
     let age = Math.floor(
       (new Date() - new Date(taskCreated)) / (1000 * 60 * 60 * 24)
     );
@@ -42,30 +51,96 @@ class App extends Component {
     return score;
   };
 
-  calculateProjectScore = task => {};
+  // Calculate a score based on the priority of the project
+  calculateProjectScore = task => {
+    let projectCount = this.state.projects.length;
 
-  orderData = tasks => {
+    // find the task's project in the projects array
+    let project = this.state.projects.find(
+      project => project.name === task.projects
+    );
+
+    return projectCount - project.id + 1;
+  };
+
+  // Calculate the total score for the task
+  calculateTaskScore = task => {
+    return (
+      this.calculateTaskAge(task.created) + this.calculateProjectScore(task)
+    );
+  };
+
+  orderData = () => {
     let rawData = [];
-
-    tasks.map(task => {
-      let totalScore = this.calculateTaskAge(task.created);
+    Object.keys(this.state.tasks).map(id => {
+      let task = this.state.tasks[id];
+      let totalScore = this.calculateTaskScore(task);
       let newData = [task, totalScore];
       rawData.push(newData);
     });
 
-    return rawData.sort(function(a, b) {
-      return a[1] - b[1];
+    // Sorts the array by the total score 9-1;
+    rawData.sort(function(a, b) {
+      return b[1] - a[1];
     });
+
+    // Remove the total score int from the array
+    rawData.map(item => {
+      item.pop();
+    });
+
+    let newArr = [].concat.apply([], rawData);
+    return newArr;
+  };
+
+  handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      this.sendToServer();
+      this.setState({ taskInputValue: '' });
+    }
+  };
+
+  updateTaskInputValue(evt) {
+    this.setState({
+      taskInputValue: evt.target.value
+    });
+  }
+
+  sendToServer = () => {
+    fetch('http://localhost:5000/api/createtask', {
+      method: 'POST',
+      headers: new Headers(),
+      body: JSON.stringify({
+        projects: 'OJB',
+        value: this.state.taskInputValue
+      })
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(newData => {
+        this.setState({ tasks: newData.tasks });
+      });
+    this.setState({ taskInputValue: '' });
   };
 
   render() {
-    this.state.tasks.length > 0
-      ? console.log(this.orderData(this.state.tasks))
-      : console.log('First load.');
-
     return (
       <div className="app">
         <h1>Today's tasks</h1>
+        <div>
+          <form>
+            <input
+              id="add-task-input"
+              type="text"
+              placeholder="Add task"
+              value={this.state.taskInputValue}
+              onKeyPress={this.handleKeyPress}
+              onChange={evt => this.updateTaskInputValue(evt)}
+            />
+            <input type="submit" onClick={this.sendToServer} />
+          </form>
+        </div>
         <h2>MIT</h2>
         <ul>
           <li>This is your most important task</li>
@@ -75,16 +150,20 @@ class App extends Component {
           {this.state.tasks.length < 1 ? (
             <li>No Data available</li>
           ) : (
-            this.state.tasks.map((task, idx) => (
+            this.orderData().map((task, idx) => (
               <li className="task" key={idx}>
                 <ul>
                   <li>{task.value}</li>
                 </ul>
                 <ul className="label">
-                  <li className="project">{task.projects}</li>
-                  <li className="created">
-                    {new Date(task.created).toLocaleDateString()}
+                  <li className="project">
+                    {task.projects} - {this.calculateProjectScore(task)}
                   </li>
+                  <li className="created">
+                    {new Date(task.created).toLocaleDateString()} -{' '}
+                    {this.calculateTaskAge(task.created)}
+                  </li>
+                  <li>{this.calculateTaskScore(task)}</li>
                 </ul>
               </li>
             ))
