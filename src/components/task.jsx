@@ -2,11 +2,47 @@ import React, { Component } from 'react';
 
 class Task extends Component {
   state = {
-    created: this.props.created
+    created: this.props.created,
+    editMode: false,
+    taskInputValue: this.props.children
   };
 
-  handleOnClick = () => {
-    this.props.onClick(this.props.id);
+  onHandleEdit = () => {
+    this.setState({ editMode: true });
+  };
+
+  updateTaskInputValue(evt) {
+    this.setState({
+      taskInputValue: evt.target.value
+    });
+  }
+
+  handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      this.props.onUpdateTask(this.props.id, this.state.taskInputValue);
+      this.setState({ editMode: false });
+    }
+  };
+
+  onHandleDelete = () => {
+    this.props.onDelete(this.props.id);
+  };
+
+  handleOnCompleteTask = () => {
+    this.props.onCompleteTask(this.props.id);
+  };
+
+  calculateTaskAge = dateCreated => {
+    const created = new Date(dateCreated);
+    const today = new Date();
+    let age = Math.floor((today - created) / (1000 * 60 * 60 * 24));
+    if (age < 2) {
+      return 'Created today';
+    } else if (age / 7 >= 1) {
+      return Math.floor(age / 7) + 'w ago';
+    } else {
+      return (age % 7) + 'd ago';
+    }
   };
 
   render() {
@@ -14,15 +50,35 @@ class Task extends Component {
       <React.Fragment>
         <li className="task" key={this.props.taskid}>
           <ul>
-            <li>{this.props.children}</li>
+            <li>
+              <input
+                type="checkbox"
+                className="form-radio"
+                id="check-one"
+                onClick={this.handleOnCompleteTask}></input>
+            </li>
+            <li className="taskValue" onClick={this.onHandleEdit}>
+              {this.state.editMode === true ? (
+                <input
+                  type="text"
+                  placeholder="Add task"
+                  value={this.state.taskInputValue}
+                  onKeyPress={this.handleKeyPress}
+                  onChange={evt => this.updateTaskInputValue(evt)}></input>
+              ) : (
+                this.props.children
+              )}
+            </li>
           </ul>
-          <ul className="label">
+          <ul className="labels">
             <li className="project">{this.props.projects}</li>
             <li className="created">
-              {new Date(this.props.created).toLocaleDateString()}
+              {this.calculateTaskAge(this.props.created)}
             </li>
             <li>
-              <button onClick={this.handleOnClick}>Delete</button>
+              <button className="inline-link" onClick={this.onHandleDelete}>
+                Delete
+              </button>
             </li>
           </ul>
         </li>

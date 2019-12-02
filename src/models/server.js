@@ -1,10 +1,15 @@
 // Model - Talks to the db and the controller and knows how to modify data
 
-let express = require('express');
-let tasks = require('../database/tasks.json');
-let projects = require('../database/projects.json');
-let app = express();
-let fs = require('fs');
+const express = require('express');
+const app = express();
+const fs = require('fs');
+const filePath = '../database/';
+const completedTasksFileName = 'completedTasks.json';
+const tasksFileName = 'tasks.json';
+const projectsFileName = 'projects.json';
+let tasks = require(filePath + tasksFileName);
+let projects = require(filePath + projectsFileName);
+let completedTasks = require(filePath + completedTasksFileName);
 
 app.use(
   express.json({
@@ -21,9 +26,9 @@ app.use(function(req, res, next) {
 });
 
 // Update local json file
-updateJsonFile = data => {
+updateJsonFile = (data, file) => {
   let newData = JSON.stringify(data);
-  fs.writeFile('../database/tasks.json', newData, err => {
+  fs.writeFile(filePath + file, newData, err => {
     if (err) throw err;
   });
 };
@@ -42,24 +47,30 @@ calculateTaskAge = date => {
   } else {
     score = 0;
   }
+
   return score;
 };
 
 // Calculate a score based on the priority of the project
 calculateProjectScore = task => {
-  let projectCount = projects.length;
+  let projectCount = Object.keys(projects).length;
 
-  // find the task's project in the projects array
-  let project = Object.keys(projects).map(id => {
-    return projects[id].name === task.projects;
+  // find the task's project in the projects array and get the id
+  let projectScore = Object.keys(projects).find(pro => {
+    if (projects[pro].name === task.projects) {
+      let score = projects[pro].id;
+      return parseInt(score, 10);
+    } else {
+      return 0;
+    }
   });
-
-  return projectCount - project.id + 1;
+  return projectCount - projectScore + 1;
 };
 
 // Calculate the total score for the task
 calculateTaskScore = task => {
-  return calculateTaskAge(task.created) + calculateProjectScore(task);
+  let score = calculateTaskAge(task.created) + calculateProjectScore(task);
+  return score;
 };
 
 // Order data
@@ -68,7 +79,6 @@ orderData = data => {
   Object.keys(data).map(id => {
     let task = data[id];
     let totalScore = calculateTaskScore(task);
-    task.id = id;
     let newData = [task, totalScore];
     rawData.push(newData);
   });
@@ -86,10 +96,22 @@ orderData = data => {
   return newArr;
 };
 
-// Get data from JSON file
-app.get('/api/gettasks', function(req, res, next) {
+// Get tasks
+app.get('/api/getincompletetasks', function(req, res, next) {
   res.send(orderData(tasks));
-  console.log('Data sent!');
+  console.log('Tasks sent!');
+});
+
+// Get completed tasks
+app.get('/api/getcompletedtasks', function(req, res, next) {
+  res.send(orderData(completedTasks));
+  console.log('Tasks sent!');
+});
+
+// Get projects
+app.get('/api/getprojects', function(req, res, next) {
+  res.send(projects);
+  console.log('Proejcts sent!');
 });
 
 //Create a new task
@@ -101,11 +123,26 @@ app.post('/api/createtask', (req, res) => {
   tasks[ids] = {
     value: req.body.value,
     projects: req.body.projects,
-    created: created
+    created: created,
+    id: ids
   };
-  updateJsonFile(tasks);
-  res.send(tasks);
-  console.log('JSON updated');
+
+  updateJsonFile(tasks, tasksFileName);
+  res.send(orderData(tasks));
+  console.log('Task ' + ids + ' has been created.');
+});
+
+// Update task
+app.post('/api/edittask', (req, res) => {
+  const task = tasks[req.body.taskid];
+  if (!task) {
+    res.status(404).send('Task not found');
+  } else {
+    task.value = req.body.value;
+    updateJsonFile(tasks, tasksFileName);
+    res.send(orderData(tasks));
+    console.log('Task ' + task.id + ' has been updated.');
+  }
 });
 
 // Delete task
@@ -115,10 +152,29 @@ app.post('/api/delete/:taskid', (req, res) => {
     res.status(404).send('Task not found');
   } else {
     delete tasks[req.params.taskid];
-    updateJsonFile(tasks);
+    updateJsonFile(tasks, tasksFileName);
     res.send(orderData(tasks));
+    console.log('Task ' + req.params.taskid + ' has been deleted.');
   }
 });
 
-// Need to add Edit, Delete functionality
-app.listen(5000, () => console.log('Example app listening on port 5000!'));
+// Complete task
+app.post('/api/completetask', (req, res) => {
+  const task = tasks[req.body.taskid];
+  if (!task) {
+    res.status(404).send('Task not found');
+  } else {
+    completedTasks[req.body.taskid] = task;
+    delete tasks[req.body.taskid];
+    updateJsonFile(tasks, tasksFileName);
+    updateJsonFile(completedTasks, completedTasksFileName);
+    let data = [orderData(tasks), orderData(completedTasks)];
+    res.send(orderData(data));
+    console.log('Task ' + task.id + ' has been completed.');
+  }
+});
+
+app.listen(5000, () => {
+  console.log('Example app listening on port 5000!');
+  console.log('----------');
+});

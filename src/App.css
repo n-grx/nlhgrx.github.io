@@ -1,7 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Heebo:300,400,700&display=swap');
+
+body {
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px;
+  /* background-color: #262730; */
+}
+
 .app {
   width: 70%;
   display: block;
   margin: 0% auto;
+  max-width: 600px;
 }
 
 ul {
@@ -11,6 +20,7 @@ ul {
 }
 
 .task-list {
+  margin-top: 48px;
 }
 
 .task {
@@ -19,25 +29,163 @@ ul {
   border-bottom: 1px solid lightgrey;
 }
 
+.taskValue {
+  margin-top: 3px;
+}
+
+.task ul li {
+  float: left;
+}
+
+.task ul li:first-child {
+  margin-right: 8px;
+}
+
 ul li ul {
   display: table;
 }
 
-.label {
+.labels {
   font-size: 14px;
-  margin: 8px 0 0 0;
+  margin: 8px 0 0 38px;
 }
 
-.label li {
+.labels li {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgb(59, 59, 59);
   float: left;
   padding: 1px 4px;
-  border: 1px solid gray;
-  border-radius: 2px;
+  /* border: 1px solid gray;
+  border-radius: 2px; */
   margin: 0 8px 0 0;
+  background-color: #ececec;
+  border-radius: 4px;
+}
+
+.labels li .inline-link {
+  background-color: #ececec;
+  text-decoration: none;
+  color: crimson;
+}
+
+.task-value {
+}
+
+.task-details {
+}
+
+.project-label {
+}
+.date-label {
 }
 
 .project {
 }
 
 .created {
+}
+
+.completedTaskList {
+}
+.completedTaskList li {
+  text-decoration: line-through;
+  padding: 8px 0 8px 0;
+  border-bottom: 1px solid lightgrey;
+}
+
+.btn {
+}
+
+.btn-delete {
+}
+
+.btn-icon {
+}
+
+.btn-icon img {
+  height: 16px;
+  width: auto;
+}
+
+.form-radio {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  position: relative;
+  background-color: #ffffff;
+  color: #666;
+  top: 0px;
+  height: 18px;
+  width: 18px;
+  border: 1px solid #8f8f8f;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-right: 7px;
+  outline: none;
+}
+.form-radio:checked::before {
+  position: absolute;
+  font: 10px 'Open Sans', sans-serif;
+  left: 5px;
+  top: 2px;
+  content: '\02143';
+  transform: rotate(40deg);
+}
+.form-radio:hover {
+  background-color: #f7f7f7;
+}
+.form-radio:checked {
+  background-color: #b5e7b1;
+}
+label {
+  font: 15px/1.7 'Open Sans', sans-serif;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: pointer;
+}
+
+.form-checkbox {
+  border-radius: 3px;
+}
+.form-radio {
+  border-radius: 50px;
+}
+
+.menu-container {
+  width: 200px;
+  height: 250px;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px 16px;
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
+.menu {
+  overflow: scroll;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+}
+.menu ul li {
+  line-height: 32px;
+  background-color: red;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  padding-left: 8px;
+}
+
+.inline-link {
+  float: right;
+  padding: 0;
+  margin: 0 0 0 0px;
+  text-decoration: underline;
+  color: blue;
+  background-color: white;
+  border: none;
 }
