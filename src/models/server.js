@@ -11,6 +11,13 @@ let tasks = require(filePath + tasksFileName);
 let projects = require(filePath + projectsFileName);
 let completedTasks = require(filePath + completedTasksFileName);
 
+// Single file test
+const taskMasterFileName = 'taskmaster.json';
+let taskMaster = require(filePath + taskMasterFileName);
+let incompleteTasks = taskMaster.incompleteTasks;
+let completedTasks2 = taskMaster.completedTasks;
+let projects2 = taskMaster.projects;
+
 app.use(
   express.json({
     type: ['application/json', 'text/plain']
