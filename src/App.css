@@ -1,9 +1,36 @@
-@import url('https://fonts.googleapis.com/css?family=Heebo:300,400,700&display=swap');
+:root {
+  --snow-white: #ffffff;
+  --off-white: #f9f9f9;
+  --primary: #00acff;
+  --secondary: #e6eaee;
+  --secondary-dark: #acb8c4;
+  --shadow: rgba(68, 74, 80, 0.36);
+  --danger: #e55e5e;
+  --success: #54bb5a;
+  --warning: #f1a948;
+  --base: #2c3e50;
+  --green: #25b84c;
+  --grey2: #eaeaea;
+  --resin-black: #212227;
+}
 
 body {
-  font-family: 'Heebo', sans-serif;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
   font-size: 16px;
+  color: var(--base);
   /* background-color: #262730; */
+}
+
+h1 {
+}
+
+h2 {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin: 0 0 16px 0;
 }
 
 .app {
@@ -13,77 +40,93 @@ body {
   max-width: 600px;
 }
 
+/* ================================
+Add new task input
+==================================*/
+.new-task-container {
+  padding: 16px;
+  margin: 0 0 24px 0;
+  background-color: var(--off-white);
+  border-radius: 8px;
+}
+
+#add-task-input {
+  background-color: var(--off-white);
+  border: none;
+}
+
+/* ================================
+Menu
+==================================*/
+
+.menu-container {
+  width: 200px;
+  height: auto;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 16px 8px 8px 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  z-index: 1000;
+  margin-top: 2px;
+}
+
+.menu {
+  overflow: auto;
+}
+
+.menu-input {
+  padding: 0px 8px;
+  margin-bottom: 8px;
+}
+
+.menu-input input {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid var(--secondary-dark);
+}
+
+.menu-list {
+}
+.menu-item {
+  height: 32px;
+  line-height: 32px;
+  border-radius: 4px;
+  padding: 0 8px 0 8px;
+}
+
+.menu-item:hover {
+  background-color: var(--secondary);
+}
+
+.popover {
+  background: #fff;
+  border-radius: 4px;
+  width: 300px;
+  margin: 20px auto;
+  padding: 15px;
+  position: absolute;
+  top: 100%;
+  left: -50px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.popover-container {
+  width: 200px;
+  /* margin: 50px auto; */
+  position: relative;
+}
+
+/* =============================== */
+
 ul {
   list-style: none;
   margin: 0px;
   padding: 0px;
-}
-
-.task-list {
-  margin-top: 48px;
-}
-
-.task {
-  margin: 0 0 16px 0;
-  padding: 0 0 16px 0;
-  border-bottom: 1px solid lightgrey;
-}
-
-.taskValue {
-  margin-top: 3px;
-}
-
-.task ul li {
-  float: left;
-}
-
-.task ul li:first-child {
-  margin-right: 8px;
-}
-
-ul li ul {
-  display: table;
-}
-
-.labels {
-  font-size: 14px;
-  margin: 8px 0 0 38px;
-}
-
-.labels li {
-  font-size: 12px;
-  font-weight: 700;
-  color: rgb(59, 59, 59);
-  float: left;
-  padding: 1px 4px;
-  /* border: 1px solid gray;
-  border-radius: 2px; */
-  margin: 0 8px 0 0;
-  background-color: #ececec;
-  border-radius: 4px;
-}
-
-.labels li .inline-link {
-  background-color: #ececec;
-  text-decoration: none;
-  color: crimson;
-}
-
-.task-value {
-}
-
-.task-details {
-}
-
-.project-label {
-}
-.date-label {
-}
-
-.project {
-}
-
-.created {
 }
 
 .completedTaskList {
@@ -108,6 +151,58 @@ ul li ul {
   width: auto;
 }
 
+.inline-link {
+  float: right;
+  padding: 0;
+  margin: 0 0 0 0px;
+  text-decoration: underline;
+  color: blue;
+  background-color: white;
+  border: none;
+}
+
+/* ================================
+Item task
+==================================*/
+
+.mit-task-container {
+  margin: 16px 0 48px 0;
+  padding: 16px;
+  background-color: var(--secondary);
+  border-radius: 8px;
+}
+
+.mit-task-container .task-item {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mit-task-container .task-content-project {
+  color: black;
+}
+
+.mit-task {
+}
+
+.task {
+  margin: 0 0 16px 0;
+  padding: 0 0 16px 0;
+  border-bottom: 1px solid lightgrey;
+}
+
+.task-list {
+  margin: 0 0 0 0;
+}
+
+.task-list-container {
+  margin: 0 0 0 0;
+}
+
+.checker {
+  display: inline-block;
+}
+
 .form-radio {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -122,14 +217,14 @@ ul li ul {
   border: 1px solid #8f8f8f;
   border-radius: 50px;
   cursor: pointer;
-  margin-right: 7px;
+  margin-right: 16px;
   outline: none;
+  top: -10px;
 }
+
 .form-radio:checked::before {
   position: absolute;
   font: 10px 'Open Sans', sans-serif;
-  left: 5px;
-  top: 2px;
   content: '\02143';
   transform: rotate(40deg);
 }
@@ -139,53 +234,171 @@ ul li ul {
 .form-radio:checked {
   background-color: #b5e7b1;
 }
-label {
-  font: 15px/1.7 'Open Sans', sans-serif;
-  color: #333;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+
+.task-item {
+  position: relative;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.task-actions {
+  display: flex;
+  position: absolute;
+  right: 4px;
+  top: 0;
+  height: calc(100% - 11px);
   cursor: pointer;
 }
 
-.form-checkbox {
-  border-radius: 3px;
-}
-.form-radio {
-  border-radius: 50px;
+.task-details {
 }
 
-.menu-container {
-  width: 200px;
-  height: 250px;
-  background-color: white;
-  border-bottom: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 8px 16px;
-  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+.task-content {
+  display: inline-block;
+}
+.task-content span {
+  margin-bottom: 4px;
+  display: inline-block;
 }
 
-.menu {
-  overflow: scroll;
+.task-content-bottom {
 }
 
-.menu ul {
+.task-content-age {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--base);
+}
+
+.task-content-project {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--secondary);
+  text-transform: uppercase;
+}
+.task-action-menu {
+}
+
+/* ================================
+Material Icons
+==================================*/
+.drag-icon-left {
+  margin-right: 4px;
+  cursor: move;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  /* line-height: 1; */
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  display: inline-flex;
+  vertical-align: middle;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 {
+  font-size: 18px;
+}
+.material-icons.md-24 {
+  font-size: 24px;
+}
+.material-icons.md-36 {
+  font-size: 36px;
+}
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark {
+  color: rgba(0, 0, 0, 0.54);
+}
+.material-icons.md-dark.md-inactive {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light {
+  color: rgba(255, 255, 255, 1);
+}
+.material-icons.md-light.md-inactive {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+/* ==== */
+
+.App {
+  font-family: sans-serif;
+  font-size: 1.5rem;
+  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.App main {
+  background-color: #383838;
+  color: #fff;
+  padding: 10px;
+}
+
+.App ul {
+  margin: 0;
+  padding: 0;
   list-style: none;
-  padding: 0;
-}
-.menu ul li {
-  line-height: 32px;
-  background-color: red;
-  margin-bottom: 8px;
-  border-radius: 4px;
-  padding-left: 8px;
 }
 
-.inline-link {
-  float: right;
-  padding: 0;
-  margin: 0 0 0 0px;
-  text-decoration: underline;
-  color: blue;
-  background-color: white;
-  border: none;
+.App ul li {
+  background-color: #383838;
+  padding: 10px 20px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1;
+}
+
+.App li .drag {
+  margin-right: 15px;
+  cursor: move;
+}
+
+.App li svg {
+  height: 2rem;
+  color: #fff;
+}
+
+.hide {
+  display: none;
 }

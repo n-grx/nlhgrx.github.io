@@ -1,20 +1,16 @@
 {
   "projects": {
     "id-1575321505129": {
-      "name": "OJB",
-      "priority": 1
+      "name": "OJB"
     },
     "id-1575321509156": {
-      "name": "Reschedule",
-      "priority": 2
+      "name": "Reschedule"
     },
     "id-1575321513250": {
-      "name": "Admin",
-      "priority": 3
+      "name": "Admin"
     },
     "id-1575321518194": {
-      "name": "Smart",
-      "priority": 4
+      "name": "Smart"
     }
   },
   "incompleteTasks": {

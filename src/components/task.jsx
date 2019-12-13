@@ -48,7 +48,7 @@ class Task extends Component {
   render() {
     return (
       <React.Fragment>
-        <li className="task" key={this.props.taskid}>
+        {/* <li className="task" key={this.props.taskid}>
           <ul>
             <li>
               <input
@@ -81,6 +81,39 @@ class Task extends Component {
               </button>
             </li>
           </ul>
+        </li> */}
+
+        <li className="task-item">
+          <div className="task-details">
+            <div className="checker">
+              <input
+                type="checkbox"
+                className="form-radio"
+                id="check-one"
+                onClick={this.handleOnCompleteTask}></input>
+            </div>
+            <div className="task-content">
+              <span onClick={this.onHandleEdit}>
+                {this.state.editMode === true ? (
+                  <input
+                    type="text"
+                    placeholder="Add task"
+                    value={this.state.taskInputValue}
+                    onKeyPress={this.handleKeyPress}
+                    onChange={evt => this.updateTaskInputValue(evt)}></input>
+                ) : (
+                  this.props.children
+                )}
+              </span>
+              <div className="task-content-bottom task-content-age">
+                {this.calculateTaskAge(this.props.created)}
+              </div>
+            </div>
+          </div>
+          <div className="task-actions">
+            <div className="task-content-project">{this.props.projects}</div>
+            <div className="task-action-menu"></div>
+          </div>
         </li>
       </React.Fragment>
     );

@@ -1,56 +1,49 @@
 import React, { Component } from 'react';
 import './App.css';
 import Task from './components/task';
+import AddNewTask from './components/createNewTask';
+import Dropdown from './components/dropdown';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
       projects: [],
+      mit: [],
       tasks: [],
-      completedTasks: [],
       taskInputValue: '',
-      projectSelectorValue: ''
+      projectSelectorValue: '',
+      projectListOpen: false
     };
   }
 
-  componentDidMount() {
-    const myHeaders = new Headers({
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    });
+  myHeaders = new Headers({
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  });
 
+  componentDidMount() {
     fetch('http://localhost:5000/api/getincompletetasks', {
-      headers: myHeaders
+      headers: this.state.myHeaders
     })
       .then(response => {
         return response.json();
       })
       .then(data => {
+        this.setState({ mit: data[0] });
+        data.splice(0, 1);
         this.setState({ tasks: data });
       });
 
-    fetch('http://localhost:5000/api/getcompletedtasks', {
-      headers: myHeaders
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        this.setState({ completedTasks: data });
-      });
-
     fetch('http://localhost:5000/api/getprojects', {
-      headers: myHeaders
+      headers: this.state.myHeaders
     })
       .then(response => {
         return response.json();
       })
       .then(data => {
         this.setState({ projects: data });
-      })
-      .then(console.log(Object.keys(this.state.projects)));
+      });
 
     // this.setState({ projectSelectorValue : initialProject });
   }
@@ -76,6 +69,41 @@ class App extends Component {
 
   updateTaskValueInDb = (value, taskId) => {
     console.log(value, taskId);
+  };
+
+  handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.createTask();
+    }
+  };
+
+  updateTaskInputValue(evt) {
+    this.setState({
+      taskInputValue: evt.target.value
+    });
+  }
+
+  updateProjectValue = value => {
+    this.setState({
+      projectSelectorValue: value
+    });
+  };
+
+  updateProjectObject = object => {
+    fetch('http://localhost:5000/api/updateprojects', {
+      method: 'POST',
+      headers: new Headers(),
+      body: JSON.stringify({
+        projects: object
+      })
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        this.setState({ projects: data[0], tasks: data[1] });
+      });
   };
 
   // Send the new task to the server and update state.tasks with the new task
@@ -144,15 +172,36 @@ class App extends Component {
         return response.json();
       })
       .then(data => {
-        this.setState({ tasks: data[0], completedTasks: data[1] });
+        this.setState({ mit: data[0] });
+        data.splice(0, 1);
+        this.setState({ tasks: data });
+      });
+  };
+
+  // restore test data
+  restoretestData = () => {
+    fetch('http://localhost:5000/api/testdata', {
+      headers: this.state.myHeaders
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        this.setState({ tasks: data });
       });
   };
 
   render() {
     return (
       <div className="app">
-        <h1>Today's tasks</h1>
-        <div>
+        <h1>
+          To Do (
+          <a onClick={this.restoretestData} href="#">
+            Restore
+          </a>
+          )
+        </h1>
+        <div className="new-task-container">
           <input
             id="add-task-input"
             type="text"
@@ -160,35 +209,50 @@ class App extends Component {
             value={this.state.taskInputValue}
             onKeyPress={this.handleKeyPress}
             onChange={evt => this.updateTaskInputValue(evt)}></input>
-          <select
-            className="ui compact selection dropdown"
-            onChange={evt => this.updateProjectValue(evt)}>
-            {Object.keys(this.state.projects).map((project, idx) => (
-              <option key={idx}>{this.state.projects[project].name}</option>
-            ))}
-          </select>
-          <button onClick={this.createTask}>Search</button>
+          <Dropdown
+            items={this.state.projects}
+            onUpdateProjectObject={this.updateProjectObject}
+            searchable={true}
+            sortable={true}></Dropdown>
+          <button onClick={this.createTask}>Add</button>
         </div>
-
-        <ul className="task-list">
-          {this.state.tasks.length < 1 ? (
-            <li>Looks like you're done for the day!</li>
+        <div className="mit-task-container">
+          <h2>This is your MIT</h2>
+          <ul className="mit-task">
+            <Task
+              key={this.state.mit.id}
+              id={this.state.mit.id}
+              projects={this.state.mit.projects}
+              created={this.state.mit.created}
+              onDelete={this.deleteFromServer}
+              onUpdateTask={this.updateTask}
+              onCompleteTask={this.completeTask}>
+              {this.state.mit.value}
+            </Task>
+          </ul>
+        </div>
+        <div className="task-list-container">
+          <h2>Everything else</h2>
+          {this.state.mit < 1 ? (
+            <p>Looks like you're done for the day!</p>
           ) : (
-            this.state.tasks.map(task => (
-              <Task
-                key={task.id}
-                id={task.id}
-                projects={task.projects}
-                created={task.created}
-                onDelete={this.deleteFromServer}
-                onUpdateTask={this.updateTask}
-                onCompleteTask={this.completeTask}>
-                {task.value}
-              </Task>
-            ))
+            <ul className="task-list">
+              {this.state.tasks.map(task => (
+                <Task
+                  key={task.id}
+                  id={task.id}
+                  projects={task.projects}
+                  created={task.created}
+                  onDelete={this.deleteFromServer}
+                  onUpdateTask={this.updateTask}
+                  onCompleteTask={this.completeTask}>
+                  {task.value}
+                </Task>
+              ))}
+            </ul>
           )}
-        </ul>
-        <h3>Completed tasks</h3>
+        </div>
+        {/* <h3>Completed tasks</h3>
         <ul className="completedTaskList">
           {this.state.completedTasks.length < 1 ? (
             <li>You haven't completed any tasks yet.</li>
@@ -199,7 +263,7 @@ class App extends Component {
               </li>
             ))
           )}
-        </ul>
+        </ul> */}
       </div>
     );
   }
