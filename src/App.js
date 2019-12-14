@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
 import Task from './components/task';
-import AddNewTask from './components/createNewTask';
-import Dropdown from './components/dropdown';
+import NewTaskModule from './components/newTaskModule';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      projects: [],
       mit: [],
       tasks: [],
-      taskInputValue: '',
-      projectSelectorValue: '',
-      projectListOpen: false
+      projects: []
     };
   }
 
@@ -48,49 +44,7 @@ class App extends Component {
     // this.setState({ projectSelectorValue : initialProject });
   }
 
-  handleKeyPress = event => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      this.createTask();
-    }
-  };
-
-  updateTaskInputValue(evt) {
-    this.setState({
-      taskInputValue: evt.target.value
-    });
-  }
-
-  updateProjectValue(evt) {
-    this.setState({
-      projectSelectorValue: evt.target.value
-    });
-  }
-
-  updateTaskValueInDb = (value, taskId) => {
-    console.log(value, taskId);
-  };
-
-  handleKeyPress = event => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      this.createTask();
-    }
-  };
-
-  updateTaskInputValue(evt) {
-    this.setState({
-      taskInputValue: evt.target.value
-    });
-  }
-
-  updateProjectValue = value => {
-    this.setState({
-      projectSelectorValue: value
-    });
-  };
-
-  updateProjectObject = object => {
+  reorderProjects = object => {
     fetch('http://localhost:5000/api/updateprojects', {
       method: 'POST',
       headers: new Headers(),
@@ -102,18 +56,20 @@ class App extends Component {
         return response.json();
       })
       .then(data => {
-        this.setState({ projects: data[0], tasks: data[1] });
+        let newMit = data[1][0];
+        data[1].splice(0, 1);
+        this.setState({ mit: newMit, tasks: data[1], projects: data[0] });
       });
   };
 
   // Send the new task to the server and update state.tasks with the new task
-  createTask = () => {
+  createTask = (task, project) => {
     fetch('http://localhost:5000/api/createtask', {
       method: 'POST',
       headers: new Headers(),
       body: JSON.stringify({
-        projects: this.state.projectSelectorValue,
-        value: this.state.taskInputValue
+        projects: project,
+        value: task
       })
     })
       .then(response => {
@@ -172,9 +128,13 @@ class App extends Component {
         return response.json();
       })
       .then(data => {
-        this.setState({ mit: data[0] });
-        data.splice(0, 1);
-        this.setState({ tasks: data });
+        if (data.length < 1) {
+          this.setState({ tasks: false, mit: false });
+        } else {
+          this.setState({ mit: data[0] });
+          data.splice(0, 1);
+          this.setState({ tasks: data });
+        }
       });
   };
 
@@ -187,83 +147,64 @@ class App extends Component {
         return response.json();
       })
       .then(data => {
+        this.setState({ mit: data[0] });
+        data.splice(0, 1);
         this.setState({ tasks: data });
       });
+  };
+
+  onHandleCreateTask = (task, project) => {
+    this.createTask(task, project);
   };
 
   render() {
     return (
       <div className="app">
-        <h1>
-          To Do (
-          <a onClick={this.restoretestData} href="#">
-            Restore
-          </a>
-          )
-        </h1>
-        <div className="new-task-container">
-          <input
-            id="add-task-input"
-            type="text"
-            placeholder="Add task"
-            value={this.state.taskInputValue}
-            onKeyPress={this.handleKeyPress}
-            onChange={evt => this.updateTaskInputValue(evt)}></input>
-          <Dropdown
-            items={this.state.projects}
-            onUpdateProjectObject={this.updateProjectObject}
-            searchable={true}
-            sortable={true}></Dropdown>
-          <button onClick={this.createTask}>Add</button>
-        </div>
-        <div className="mit-task-container">
-          <h2>This is your MIT</h2>
-          <ul className="mit-task">
-            <Task
-              key={this.state.mit.id}
-              id={this.state.mit.id}
-              projects={this.state.mit.projects}
-              created={this.state.mit.created}
-              onDelete={this.deleteFromServer}
-              onUpdateTask={this.updateTask}
-              onCompleteTask={this.completeTask}>
-              {this.state.mit.value}
-            </Task>
-          </ul>
-        </div>
-        <div className="task-list-container">
-          <h2>Everything else</h2>
-          {this.state.mit < 1 ? (
-            <p>Looks like you're done for the day!</p>
-          ) : (
-            <ul className="task-list">
-              {this.state.tasks.map(task => (
+        <h1>To Do</h1>
+        <button onClick={this.restoretestData}>Restore</button>
+        <NewTaskModule
+          items={this.state.projects}
+          onCreateTask={this.onHandleCreateTask}
+          onReorderProjects={this.reorderProjects}></NewTaskModule>
+
+        {this.state.mit === false ? (
+          <p>Looks like you're done for the day</p>
+        ) : (
+          <React.Fragment>
+            <div className="mit-task-container">
+              <h2>This is your MIT</h2>
+              <ul className="mit-task">
                 <Task
-                  key={task.id}
-                  id={task.id}
-                  projects={task.projects}
-                  created={task.created}
+                  key={this.state.mit.id}
+                  id={this.state.mit.id}
+                  projects={this.state.mit.projects}
+                  created={this.state.mit.created}
                   onDelete={this.deleteFromServer}
                   onUpdateTask={this.updateTask}
                   onCompleteTask={this.completeTask}>
-                  {task.value}
+                  {this.state.mit.value}
                 </Task>
-              ))}
-            </ul>
-          )}
-        </div>
-        {/* <h3>Completed tasks</h3>
-        <ul className="completedTaskList">
-          {this.state.completedTasks.length < 1 ? (
-            <li>You haven't completed any tasks yet.</li>
-          ) : (
-            this.state.completedTasks.map(task => (
-              <li>
-                {task.value} <button className="inline-link">Delete</button>
-              </li>
-            ))
-          )}
-        </ul> */}
+              </ul>
+            </div>
+            <div className="task-list-container">
+              <h2>Everything else</h2>
+              <ul className="task-list">
+                {this.state.tasks.map(task => (
+                  <Task
+                    key={task.id}
+                    id={task.id}
+                    projects={task.projects}
+                    created={task.created}
+                    onDelete={this.deleteFromServer}
+                    onUpdateTask={this.updateTask}
+                    onCompleteTask={this.completeTask}>
+                    {task.value}
+                  </Task>
+                ))}
+              </ul>
+            </div>
+          </React.Fragment>
+        )}
       </div>
     );
   }

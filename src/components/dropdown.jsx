@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Dropdown extends React.Component {
+class Dropdown extends Component {
   constructor() {
     super();
 
@@ -9,7 +9,7 @@ class Dropdown extends React.Component {
 
     this.state = {
       popupVisible: false,
-      items: {},
+      items: [],
       projectSelectorValue: 'Select...'
     };
   }
@@ -62,7 +62,15 @@ class Dropdown extends React.Component {
 
   onDragEnd = () => {
     this.draggedIdx = null;
-    this.props.onUpdateProjectObject(this.state.items);
+    this.props.onProjectReorder(this.state.items);
+  };
+
+  handleProjectSelection = project => {
+    this.setState({
+      projectSelectorValue: project
+    });
+    this.props.onProjectSelection(project);
+    this.handleClick();
   };
 
   render() {
@@ -83,18 +91,14 @@ class Dropdown extends React.Component {
               </div>
               <div className="menu-list">
                 {this.props.items.map((item, idx) => (
-                  <div onDragOver={() => this.onDragOver(idx)}>
+                  <div key={idx} onDragOver={() => this.onDragOver(idx)}>
                     <div
                       className="menu-item"
-                      key={idx}
                       draggable="true"
                       onDragStart={e => this.onDragStart(e, idx)}
                       onDragEnd={this.onDragEnd}
                       onClick={() => {
-                        this.setState({
-                          projectSelectorValue: this.props.items[idx].name
-                        });
-                        this.handleClick();
+                        this.handleProjectSelection(this.props.items[idx].name);
                       }}>
                       <div>
                         <span className="drag-icon-left">

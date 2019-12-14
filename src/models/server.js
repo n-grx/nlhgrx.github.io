@@ -7,16 +7,16 @@ const filePath = '../database/';
 const completedTasksFileName = 'completedTasks.json';
 const tasksFileName = 'tasks.json';
 const projectsFileName = 'projects.json';
-let tasks = require(filePath + tasksFileName);
-let projects = require(filePath + projectsFileName);
-let completedTasks = require(filePath + completedTasksFileName);
+// let tasks = require(filePath + tasksFileName);
+// let projects = require(filePath + projectsFileName);
+// let completedTasks = require(filePath + completedTasksFileName);
 
 // Single file test
 const taskMasterFileName = 'taskmaster.json';
 let taskMaster = require(filePath + taskMasterFileName);
 let incompleteTasks = taskMaster.incompleteTasks;
-let completedTasks2 = taskMaster.completedTasks;
-let projects2 = taskMaster.projects;
+let completedTasks = taskMaster.completedTasks;
+let projects = taskMaster.projects;
 
 // Test Data
 const testData = {
@@ -103,10 +103,17 @@ app.use(function(req, res, next) {
 
 // Update local json file
 updateJsonFile = (data, file) => {
-  let newData = JSON.stringify(data);
+  let newData = JSON.stringify(data, null, 2);
   fs.writeFile(filePath + file, newData, err => {
     if (err) throw err;
   });
+};
+
+updateTaskMaster = (completedTasks, incompleteTasks, projects) => {
+  taskMaster.completedTasks = completedTasks;
+  taskMaster.incompleteTasks = incompleteTasks;
+  taskMaster.projects = projects;
+  updateJsonFile(taskMaster, taskMasterFileName);
 };
 
 // Calculate a score based on the tasks age
@@ -129,12 +136,12 @@ calculateTaskAge = date => {
 
 // Calculate a score based on the priority of the project
 calculateProjectScore = task => {
-  let projectCount = Object.keys(projects).length;
+  let projectCount = projects.length;
 
   // find the task's project in the projects array and get the id
-  let projectScore = Object.keys(projects).find(pro => {
-    if (projects[pro].name === task.projects) {
-      let score = projects[pro].id;
+  let projectScore = projects.find((pro, idx) => {
+    if (pro.name === task.projects) {
+      let score = idx;
       return parseInt(score, 10);
     } else {
       return 0;
@@ -155,6 +162,7 @@ orderData = data => {
   Object.keys(data).map(id => {
     let task = data[id];
     let totalScore = calculateTaskScore(task);
+    task.score = totalScore;
     let newData = [task, totalScore];
     rawData.push(newData);
   });
@@ -174,7 +182,7 @@ orderData = data => {
 
 // Get tasks
 app.get('/api/getincompletetasks', function(req, res, next) {
-  res.send(orderData(tasks));
+  res.send(orderData(incompleteTasks));
   console.log('Tasks sent!');
 });
 
@@ -186,15 +194,17 @@ app.get('/api/getcompletedtasks', function(req, res, next) {
 
 // Get projects
 app.get('/api/getprojects', function(req, res, next) {
-  res.send(projects);
+  let newArr = [].concat.apply([], projects);
+  res.send(newArr);
   console.log('Proejcts sent!');
 });
 
 // Re-order projects
 app.post('/api/updateprojects', (req, res) => {
   projects = req.body.projects;
-  updateJsonFile(projects, projectsFileName);
-  let data = [projects, orderData(tasks)];
+  updateTaskMaster(completedTasks, incompleteTasks, projects);
+  let newArr = [].concat.apply([], taskMaster.projects);
+  let data = [newArr, orderData(incompleteTasks)];
   res.send(data);
 });
 
@@ -204,15 +214,15 @@ app.post('/api/createtask', (req, res) => {
   let created = new Date(timeStamp);
   let ids = 'id-' + timeStamp;
 
-  tasks[ids] = {
+  incompleteTasks[ids] = {
     value: req.body.value,
     projects: req.body.projects,
     created: created,
     id: ids
   };
 
-  updateJsonFile(tasks, tasksFileName);
-  res.send(orderData(tasks));
+  updateTaskMaster(completedTasks, incompleteTasks, projects);
+  res.send(orderData(incompleteTasks));
   console.log('Task ' + ids + ' has been created.');
 });
 
@@ -244,25 +254,24 @@ app.post('/api/delete/:taskid', (req, res) => {
 
 // Complete task
 app.post('/api/completetask', (req, res) => {
-  const task = tasks[req.body.taskid];
+  const task = incompleteTasks[req.body.taskid];
   if (!task) {
     res.status(404).send('Task not found');
   } else {
     completedTasks[req.body.taskid] = task;
-    delete tasks[req.body.taskid];
-    updateJsonFile(tasks, tasksFileName);
-    updateJsonFile(completedTasks, completedTasksFileName);
-    let data = orderData(tasks);
-    res.send(data);
+    delete incompleteTasks[req.body.taskid];
+    updateTaskMaster(completedTasks, incompleteTasks, projects);
+    res.send(orderData(incompleteTasks));
     console.log('Task ' + task.id + ' has been completed.');
   }
 });
 
 // Restore test data
 app.get('/api/testdata', (req, res) => {
-  tasks = testData;
-  updateJsonFile(tasks, tasksFileName);
-  res.send(orderData(tasks));
+  incompleteTasks = testData;
+  completedTasks = {};
+  updateTaskMaster(completedTasks, incompleteTasks, projects);
+  res.send(orderData(incompleteTasks));
 });
 
 app.listen(5000, () => {
