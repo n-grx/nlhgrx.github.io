@@ -1,24 +1,40 @@
 {
   "projects": [
     {
-      "name": "UX",
-      "id": "id-1575321518207"
+      "name": "Admin 2",
+      "id": "id-1575321517823"
     },
     {
       "name": "Smart",
       "id": "id-1575321518194"
     },
     {
-      "name": "Admin",
-      "id": "id-1575321513250"
-    },
-    {
       "name": "OJB",
       "id": "id-1575321505129"
     },
     {
+      "name": "Admin",
+      "id": "id-1575321513250"
+    },
+    {
       "name": "Reschedule",
       "id": "id-1575321509156"
+    },
+    {
+      "name": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "id": "id-1575321698532"
+    },
+    {
+      "name": "Another project",
+      "id": "id-1575321698532"
+    },
+    {
+      "name": "UX",
+      "id": "id-1575321518207"
+    },
+    {
+      "name": "Noopsy's project",
+      "id": "id-1575321698532"
     }
   ],
   "incompleteTasks": {
@@ -26,164 +42,68 @@
       "value": "Catch up with Itzi about Smart chat proposal",
       "projects": "OJB",
       "created": "2019-11-07T12:04:25.375Z",
-      "id": "id-1575720265375",
-      "score": null
+      "id": "id-1575720265375"
     },
     "id-1575720282012": {
       "value": "Create calendar prototype",
       "projects": "OJB",
       "created": "2019-11-02T12:04:42.012Z",
-      "id": "id-1575720282012",
-      "score": null
+      "id": "id-1575720282012"
     },
     "id-1575720298251": {
       "value": "Create UT discussion guide",
       "projects": "OJB",
       "created": "2019-12-07T12:04:58.251Z",
-      "id": "id-1575720298251",
-      "score": null
+      "id": "id-1575720298251"
     },
     "id-1575720333155": {
       "value": "Check OJB labels for accessibility",
       "projects": "OJB",
-      "created": "2019-12-07T12:05:33.155Z",
-      "id": "id-1575720333155",
-      "score": null
+      "created": "2019-11-01T12:05:33.155Z",
+      "id": "id-1575720333155"
     },
     "id-1575720348555": {
       "value": "Get feedback from Nick RE E7 modal option",
       "projects": "OJB",
-      "created": "2019-12-07T12:05:48.555Z",
-      "id": "id-1575720348555",
-      "score": null
+      "created": "2019-10-07T12:05:48.555Z",
+      "id": "id-1575720348555"
     },
     "id-1575720371290": {
       "value": "Phone IT about getting a windows VM",
       "projects": "Admin",
-      "created": "2019-12-07T12:06:11.290Z",
-      "id": "id-1575720371290",
-      "score": null
+      "created": "2019-09-07T12:06:11.290Z",
+      "id": "id-1575720371290"
     },
     "id-1575720389795": {
       "value": "Write up mobile modal rules",
       "projects": "Admin",
-      "created": "2019-12-07T12:06:29.795Z",
-      "id": "id-1575720389795",
-      "score": null
+      "created": "2019-08-07T12:06:29.795Z",
+      "id": "id-1575720389795"
     },
     "id-1575720400219": {
       "value": "Sketch versioning",
       "projects": "Admin",
-      "created": "2019-12-07T12:06:40.219Z",
-      "id": "id-1575720400219",
-      "score": null
+      "created": "2019-07-07T12:06:40.219Z",
+      "id": "id-1575720400219"
     },
     "id-1575720415644": {
       "value": "Yellow circle - Does it apply to UX?",
       "projects": "Admin",
-      "created": "2019-12-07T12:06:55.644Z",
-      "id": "id-1575720415644",
-      "score": null
+      "created": "2019-06-07T12:06:55.644Z",
+      "id": "id-1575720415644"
     },
     "id-1575720447203": {
       "value": "Add back button to calendar designs",
       "projects": "OJB",
-      "created": "2019-12-07T12:07:27.203Z",
-      "id": "id-1575720447203",
-      "score": null
+      "created": "2019-05-07T12:07:27.203Z",
+      "id": "id-1575720447203"
     },
     "id-1575720465282": {
       "value": "Create meeting for Jan about Q1 OKRs",
       "projects": "Smart",
-      "created": "2019-12-07T12:07:45.282Z",
-      "id": "id-1575720465282",
-      "score": null
+      "created": "2019-04-07T12:07:45.282Z",
+      "id": "id-1575720465282"
     }
   },
-  "completedTasks": {
-    "id-1575720265375": {
-      "value": "Catch up with Itzi about Smart chat proposal",
-      "projects": "OJB",
-      "created": "2019-11-07T12:04:25.375Z",
-      "id": "id-1575720265375",
-      "score": null
-    },
-    "id-1575720282012": {
-      "value": "Create calendar prototype",
-      "projects": "OJB",
-      "created": "2019-11-02T12:04:42.012Z",
-      "id": "id-1575720282012",
-      "score": null
-    },
-    "id-1575720298251": {
-      "value": "Create UT discussion guide",
-      "projects": "OJB",
-      "created": "2019-12-07T12:04:58.251Z",
-      "id": "id-1575720298251",
-      "score": null
-    },
-    "id-1575720333155": {
-      "value": "Check OJB labels for accessibility",
-      "projects": "OJB",
-      "created": "2019-12-07T12:05:33.155Z",
-      "id": "id-1575720333155",
-      "score": null
-    },
-    "id-1575720348555": {
-      "value": "Get feedback from Nick RE E7 modal option",
-      "projects": "OJB",
-      "created": "2019-12-07T12:05:48.555Z",
-      "id": "id-1575720348555",
-      "score": null
-    },
-    "id-1575720371290": {
-      "value": "Phone IT about getting a windows VM",
-      "projects": "Admin",
-      "created": "2019-12-07T12:06:11.290Z",
-      "id": "id-1575720371290",
-      "score": null
-    },
-    "id-1575720389795": {
-      "value": "Write up mobile modal rules",
-      "projects": "Admin",
-      "created": "2019-12-07T12:06:29.795Z",
-      "id": "id-1575720389795",
-      "score": null
-    },
-    "id-1575720400219": {
-      "value": "Sketch versioning",
-      "projects": "Admin",
-      "created": "2019-12-07T12:06:40.219Z",
-      "id": "id-1575720400219",
-      "score": null
-    },
-    "id-1575720415644": {
-      "value": "Yellow circle - Does it apply to UX?",
-      "projects": "Admin",
-      "created": "2019-12-07T12:06:55.644Z",
-      "id": "id-1575720415644",
-      "score": null
-    },
-    "id-1575720447203": {
-      "value": "Add back button to calendar designs",
-      "projects": "OJB",
-      "created": "2019-12-07T12:07:27.203Z",
-      "id": "id-1575720447203",
-      "score": null
-    },
-    "id-1576350272205": {
-      "value": "Hello Noopsy!!",
-      "projects": "UX",
-      "created": "2019-12-14T19:04:32.205Z",
-      "id": "id-1576350272205",
-      "score": null
-    },
-    "id-1576350196900": {
-      "value": "Nick",
-      "projects": "Reschedule",
-      "created": "2019-12-14T19:03:16.900Z",
-      "id": "id-1576350196900",
-      "score": null
-    }
-  }
+  "completedTasks": {}
 }

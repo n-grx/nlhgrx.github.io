@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 class Task extends Component {
   state = {
-    created: this.props.created,
     editMode: false,
-    taskInputValue: this.props.children
+    taskInputValue: this.props.children,
+    isComplete: false
   };
 
   onHandleEdit = () => {
@@ -29,7 +29,10 @@ class Task extends Component {
   };
 
   handleOnCompleteTask = () => {
-    this.props.onCompleteTask(this.props.id);
+    this.setState({ isComplete: true });
+    setTimeout(() => {
+      this.props.onCompleteTask(this.props.id);
+    }, 600);
   };
 
   calculateTaskAge = dateCreated => {
@@ -48,41 +51,6 @@ class Task extends Component {
   render() {
     return (
       <React.Fragment>
-        {/* <li className="task" key={this.props.taskid}>
-          <ul>
-            <li>
-              <input
-                type="checkbox"
-                className="form-radio"
-                id="check-one"
-                onClick={this.handleOnCompleteTask}></input>
-            </li>
-            <li className="taskValue" onClick={this.onHandleEdit}>
-              {this.state.editMode === true ? (
-                <input
-                  type="text"
-                  placeholder="Add task"
-                  value={this.state.taskInputValue}
-                  onKeyPress={this.handleKeyPress}
-                  onChange={evt => this.updateTaskInputValue(evt)}></input>
-              ) : (
-                this.props.children
-              )}
-            </li>
-          </ul>
-          <ul className="labels">
-            <li className="project">{this.props.projects}</li>
-            <li className="created">
-              {this.calculateTaskAge(this.props.created)}
-            </li>
-            <li>
-              <button className="inline-link" onClick={this.onHandleDelete}>
-                Delete
-              </button>
-            </li>
-          </ul>
-        </li> */}
-
         <li className="task-item">
           <div className="task-details">
             <div className="checker">
@@ -92,10 +60,14 @@ class Task extends Component {
                 id="check-one"
                 onClick={this.handleOnCompleteTask}></input>
             </div>
-            <div className="task-content">
+            <div
+              className={`task-content ${
+                this.state.isComplete ? 'strikethrough' : ''
+              }`}>
               <span onClick={this.onHandleEdit}>
                 {this.state.editMode === true ? (
                   <input
+                    className="inline-task-edit"
                     type="text"
                     placeholder="Add task"
                     value={this.state.taskInputValue}
@@ -112,7 +84,11 @@ class Task extends Component {
           </div>
           <div className="task-actions">
             <div className="task-content-project">{this.props.projects}</div>
-            <div className="task-action-menu"></div>
+            <div className="task-action-menu">
+              <button className="btn btn-icon f">
+                <i class="material-icons">more_horiz</i>
+              </button>
+            </div>
           </div>
         </li>
       </React.Fragment>

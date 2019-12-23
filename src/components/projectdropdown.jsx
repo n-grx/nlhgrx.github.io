@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Dropdown extends Component {
+class ProjectDropdown extends Component {
   constructor() {
     super();
 
@@ -36,6 +36,43 @@ class Dropdown extends Component {
 
     this.handleClick();
   }
+
+  onDragStart = (e, index) => {
+    this.draggedItem = this.props.items[index];
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target.parentNode);
+    e.dataTransfer.setDragImage(e.target.parentNode, 20, 20);
+  };
+
+  onDragOver = index => {
+    const draggedOverItem = this.props.items[index];
+
+    // if the item is dragged over itself, ignore
+    if (this.draggedItem === draggedOverItem) {
+      return;
+    }
+
+    // filter out the currently dragged item
+    let items = this.props.items.filter(item => item !== this.draggedItem);
+
+    // add the dragged item after the dragged over item
+    items.splice(index, 0, this.draggedItem);
+
+    this.setState({ items: items });
+  };
+
+  onDragEnd = () => {
+    this.draggedIdx = null;
+    this.props.onProjectReorder(this.state.items);
+  };
+
+  handleProjectSelection = project => {
+    this.setState({
+      projectSelectorValue: project
+    });
+    this.props.onProjectSelection(project);
+    this.handleClick();
+  };
 
   onTextChange = e => {
     const value = e.target.value;
@@ -99,6 +136,10 @@ class Dropdown extends Component {
         ref={node => {
           this.node = node;
         }}>
+        <button onClick={this.handleClick} className="btn btn-dropdown">
+          {this.state.projectSelectorValue}
+          <i class="material-icons">arrow_drop_down</i>
+        </button>
         {this.state.popupVisible && (
           <div className="menu-container noselect">
             <div className="menu">
@@ -117,4 +158,4 @@ class Dropdown extends Component {
   }
 }
 
-export default Dropdown;
+export default ProjectDropdown;

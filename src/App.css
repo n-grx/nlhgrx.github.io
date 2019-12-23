@@ -1,28 +1,40 @@
+/* ================================
+Utilities
+==================================*/
+
 :root {
-  --snow-white: #ffffff;
-  --off-white: #f9f9f9;
-  --primary: #00acff;
-  --secondary: #e6eaee;
-  --secondary-dark: #acb8c4;
+  --base: #191927;
+  --base-lighter: #222230;
+  --base-darker: #151521;
+  --white: #ffffff;
   --shadow: rgba(68, 74, 80, 0.36);
-  --danger: #e55e5e;
-  --success: #54bb5a;
-  --warning: #f1a948;
-  --base: #2c3e50;
-  --green: #25b84c;
-  --grey2: #eaeaea;
-  --resin-black: #212227;
+  --grey5: #5d646e;
+  --concrete: #8999af;
+  --accent: deeppink;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */ /* Konqueror HTML */ /* Old versions of Firefox */ /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+.hide {
+  display: none;
 }
 
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: var(--base);
-  /* background-color: #262730; */
+  color: var(--white);
+  background-color: var(--base);
 }
 
 h1 {
+  font-size: 24px;
+  margin: 16px 0 24px 0;
 }
 
 h2 {
@@ -31,28 +43,39 @@ h2 {
   letter-spacing: 2.5px;
   text-transform: uppercase;
   margin: 0 0 16px 0;
+  color: var(--concrete);
 }
 
 .app {
   width: 70%;
   display: block;
-  margin: 0% auto;
+  margin: 24px auto;
+  margin-top: 24px;
   max-width: 600px;
+  background-color: var(--base-lighter);
+  padding: 24px;
+  border-radius: 8px;
 }
 
 /* ================================
 Add new task input
 ==================================*/
 .new-task-container {
-  padding: 16px;
-  margin: 0 0 24px 0;
-  background-color: var(--off-white);
+  padding: 0px;
+  margin: 0 0 48px 0;
+  /* background-color: var(--base); */
   border-radius: 8px;
+  display: flex;
 }
 
 #add-task-input {
-  background-color: var(--off-white);
+  background-color: transparent;
   border: none;
+  color: var(--white);
+  height: 48px;
+  padding: 0 16px;
+  font-size: 16px;
+  flex: 1 1 auto;
 }
 
 /* ================================
@@ -60,13 +83,13 @@ Menu
 ==================================*/
 
 .menu-container {
-  width: 200px;
+  min-width: 200px;
+  width: auto;
   height: auto;
-  background-color: white;
-  border-bottom: 1px solid #ddd;
+  background-color: var(--base-darker);
   border-radius: 6px;
   padding: 16px 8px 8px 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow);
   position: absolute;
   z-index: 1000;
   margin-top: 2px;
@@ -74,6 +97,7 @@ Menu
 
 .menu {
   overflow: auto;
+  width: auto;
 }
 
 .menu-input {
@@ -90,9 +114,20 @@ Menu
   border: 1px solid var(--secondary-dark);
 }
 
+.menu-input i {
+  position: relative;
+  top: -27px;
+  color: var(--base);
+}
+
 .menu-list {
 }
+
+.menu-item-container {
+}
+
 .menu-item {
+  display: flex;
   height: 32px;
   line-height: 32px;
   border-radius: 4px;
@@ -100,28 +135,16 @@ Menu
 }
 
 .menu-item:hover {
-  background-color: var(--secondary);
+  background-color: var(--base-lighter);
 }
 
-.popover {
-  background: #fff;
-  border-radius: 4px;
-  width: 300px;
-  margin: 20px auto;
-  padding: 15px;
-  position: absolute;
-  top: 100%;
-  left: -50px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+.menu-item > div {
 }
 
 .popover-container {
-  width: 200px;
-  /* margin: 50px auto; */
+  display: inline;
   position: relative;
 }
-
-/* =============================== */
 
 ul {
   list-style: none;
@@ -129,21 +152,33 @@ ul {
   padding: 0px;
 }
 
-.completedTaskList {
-}
-.completedTaskList li {
-  text-decoration: line-through;
-  padding: 8px 0 8px 0;
-  border-bottom: 1px solid lightgrey;
-}
+/* ================================
+Button styles
+==================================*/
 
 .btn {
+  height: 32px;
+  background-color: var(--base-lighter);
+  border-radius: 4px;
+  padding: 4px 8px;
 }
 
 .btn-delete {
 }
 
 .btn-icon {
+}
+
+.btn-icon:hover {
+  color: var(--accent);
+}
+
+.btn-primary {
+  background-color: var(--accent);
+}
+
+.fr {
+  float: right;
 }
 
 .btn-icon img {
@@ -161,15 +196,38 @@ ul {
   border: none;
 }
 
+.btn-dropdown {
+  height: 32px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background-color: var(--base-lighter);
+  border-radius: 4px;
+  padding: 0 0 0 8px;
+  line-height: 32px;
+}
+
+.btn:active {
+}
+
+button {
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  /* show a hand cursor on hover; some argue that we
+  should keep the default arrow cursor for buttons */
+  cursor: pointer;
+}
+
 /* ================================
 Item task
 ==================================*/
 
 .mit-task-container {
-  margin: 16px 0 48px 0;
-  padding: 16px;
-  background-color: var(--secondary);
-  border-radius: 8px;
+  margin: 0 0 48px 0;
+  padding: 0;
+  background-color: transparent;
 }
 
 .mit-task-container .task-item {
@@ -179,24 +237,31 @@ Item task
 }
 
 .mit-task-container .task-content-project {
-  color: black;
 }
 
 .mit-task {
-}
-
-.task {
-  margin: 0 0 16px 0;
-  padding: 0 0 16px 0;
-  border-bottom: 1px solid lightgrey;
 }
 
 .task-list {
   margin: 0 0 0 0;
 }
 
+.task-list .task-item:last-child {
+  margin-bottom: 0px;
+}
+
 .task-list-container {
   margin: 0 0 0 0;
+}
+
+.inline-task-edit {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--white);
+  background-color: transparent;
+  border: none;
+  width: 100%;
 }
 
 .checker {
@@ -209,13 +274,12 @@ Item task
   appearance: none;
   display: inline-block;
   position: relative;
-  background-color: #ffffff;
   color: #666;
   top: 0px;
   height: 18px;
   width: 18px;
-  border: 1px solid #8f8f8f;
-  border-radius: 50px;
+  border: 2px solid var(--grey5);
+  border-radius: 4px;
   cursor: pointer;
   margin-right: 16px;
   outline: none;
@@ -228,18 +292,65 @@ Item task
   content: '\02143';
   transform: rotate(40deg);
 }
+
 .form-radio:hover {
-  background-color: #f7f7f7;
+  background-color: var(--concrete);
+  content: '\02143';
 }
+
+.form-radio:hover::before {
+  position: absolute;
+  font: 10px 'Open Sans', sans-serif;
+  content: '\02143';
+  transform: rotate(40deg);
+}
+
 .form-radio:checked {
   background-color: #b5e7b1;
+}
+
+/* ================================
+Strikethrough animation
+==================================*/
+
+.strikethrough {
+  display: inline-block;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.strikethrough:after {
+  opacity: 0;
+  content: '';
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 4px;
+  box-shadow: 0 1px rgba(255, 255, 255, 0.6);
+  margin-top: -30px;
+  background: deeppink;
+  transform-origin: left;
+  animation: strikethrough 0.3s 0.25s cubic-bezier(0.55, 0, 0.1, 1) 1;
+  transition: transform 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* Keyframes for initial animation */
+
+@keyframes strikethrough {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 100;
+  }
 }
 
 .task-item {
   position: relative;
   padding-bottom: 16px;
   margin-bottom: 16px;
-  border-bottom: 1px solid lightgrey;
 }
 
 .task-actions {
@@ -247,7 +358,6 @@ Item task
   position: absolute;
   right: 4px;
   top: 0;
-  height: calc(100% - 11px);
   cursor: pointer;
 }
 
@@ -268,15 +378,19 @@ Item task
 .task-content-age {
   font-size: 12px;
   font-weight: 700;
-  color: var(--base);
+  color: var(--grey5);
 }
 
 .task-content-project {
   font-size: 12px;
   font-weight: 700;
-  color: var(--secondary);
+  color: rgb(138, 43, 226);
   text-transform: uppercase;
+  padding: 8px 16px;
+  background-color: rgba(138, 43, 226, 0.2);
+  border-radius: 100px;
 }
+
 .task-action-menu {
 }
 
@@ -343,62 +457,4 @@ Material Icons
 }
 .material-icons.md-light.md-inactive {
   color: rgba(255, 255, 255, 0.3);
-}
-
-.noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Opera and Firefox */
-}
-
-/* ==== */
-
-.App {
-  font-family: sans-serif;
-  font-size: 1.5rem;
-  text-align: center;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.App main {
-  background-color: #383838;
-  color: #fff;
-  padding: 10px;
-}
-
-.App ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.App ul li {
-  background-color: #383838;
-  padding: 10px 20px;
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  line-height: 1;
-}
-
-.App li .drag {
-  margin-right: 15px;
-  cursor: move;
-}
-
-.App li svg {
-  height: 2rem;
-  color: #fff;
-}
-
-.hide {
-  display: none;
 }

@@ -41,49 +41,49 @@ const testData = {
   'id-1575720333155': {
     value: 'Check OJB labels for accessibility',
     projects: 'OJB',
-    created: '2019-12-07T12:05:33.155Z',
+    created: '2019-11-01T12:05:33.155Z',
     id: 'id-1575720333155'
   },
   'id-1575720348555': {
     value: 'Get feedback from Nick RE E7 modal option',
     projects: 'OJB',
-    created: '2019-12-07T12:05:48.555Z',
+    created: '2019-10-07T12:05:48.555Z',
     id: 'id-1575720348555'
   },
   'id-1575720371290': {
     value: 'Phone IT about getting a windows VM',
     projects: 'Admin',
-    created: '2019-12-07T12:06:11.290Z',
+    created: '2019-09-07T12:06:11.290Z',
     id: 'id-1575720371290'
   },
   'id-1575720389795': {
     value: 'Write up mobile modal rules',
     projects: 'Admin',
-    created: '2019-12-07T12:06:29.795Z',
+    created: '2019-08-07T12:06:29.795Z',
     id: 'id-1575720389795'
   },
   'id-1575720400219': {
     value: 'Sketch versioning',
     projects: 'Admin',
-    created: '2019-12-07T12:06:40.219Z',
+    created: '2019-07-07T12:06:40.219Z',
     id: 'id-1575720400219'
   },
   'id-1575720415644': {
     value: 'Yellow circle - Does it apply to UX?',
     projects: 'Admin',
-    created: '2019-12-07T12:06:55.644Z',
+    created: '2019-06-07T12:06:55.644Z',
     id: 'id-1575720415644'
   },
   'id-1575720447203': {
     value: 'Add back button to calendar designs',
     projects: 'OJB',
-    created: '2019-12-07T12:07:27.203Z',
+    created: '2019-05-07T12:07:27.203Z',
     id: 'id-1575720447203'
   },
   'id-1575720465282': {
     value: 'Create meeting for Jan about Q1 OKRs',
     projects: 'Smart',
-    created: '2019-12-07T12:07:45.282Z',
+    created: '2019-04-07T12:07:45.282Z',
     id: 'id-1575720465282'
   }
 };
@@ -137,12 +137,11 @@ calculateTaskAge = date => {
 // Calculate a score based on the priority of the project
 calculateProjectScore = task => {
   let projectCount = projects.length;
+  let project = task.projects;
 
-  // find the task's project in the projects array and get the id
-  let projectScore = projects.find((pro, idx) => {
-    if (pro.name === task.projects) {
-      let score = idx;
-      return parseInt(score, 10);
+  projects.find((item, idx) => {
+    if (item.name === project) {
+      return (projectScore = parseInt(idx, 10));
     } else {
       return 0;
     }
@@ -228,13 +227,13 @@ app.post('/api/createtask', (req, res) => {
 
 // Update task
 app.post('/api/edittask', (req, res) => {
-  const task = tasks[req.body.taskid];
+  const task = incompleteTasks[req.body.taskid];
   if (!task) {
     res.status(404).send('Task not found');
   } else {
     task.value = req.body.value;
-    updateJsonFile(tasks, tasksFileName);
-    res.send(orderData(tasks));
+    updateTaskMaster(completedTasks, incompleteTasks, projects);
+    res.send(orderData(incompleteTasks));
     console.log('Task ' + task.id + ' has been updated.');
   }
 });
@@ -275,6 +274,5 @@ app.get('/api/testdata', (req, res) => {
 });
 
 app.listen(5000, () => {
-  console.log('Example app listening on port 5000!');
   console.log('----------');
 });

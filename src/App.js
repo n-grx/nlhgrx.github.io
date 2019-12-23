@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import Task from './components/task';
 import NewTaskModule from './components/newTaskModule';
+import Button from './components/button';
+import ProjectDropdown from './components/projectdropdown';
 
 class App extends Component {
   constructor(props) {
@@ -97,6 +99,8 @@ class App extends Component {
         return response.json();
       })
       .then(data => {
+        this.setState({ mit: data[0] });
+        data.splice(0, 1);
         this.setState({ tasks: data });
       });
   };
@@ -115,7 +119,7 @@ class App extends Component {
       });
   };
 
-  // Update task
+  // Complete task
   completeTask = taskIDX => {
     fetch('http://localhost:5000/api/completetask', {
       method: 'POST',
@@ -160,8 +164,13 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <h1>To Do</h1>
-        <button onClick={this.restoretestData}>Restore</button>
+        <h1>
+          Inbox
+          <button className="btn btn-icon fr" onClick={this.restoretestData}>
+            <i class="material-icons">more_horiz</i>
+          </button>
+        </h1>
+
         <NewTaskModule
           items={this.state.projects}
           onCreateTask={this.onHandleCreateTask}
