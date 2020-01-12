@@ -15,6 +15,10 @@ class ProjectDropdown extends Component {
     };
   }
 
+  componentDidMount() {
+    this.setState({ projectSelectorValue: this.props.projects });
+  }
+
   handleClick() {
     if (!this.state.popupVisible) {
       // attach/remove event handler
@@ -37,34 +41,9 @@ class ProjectDropdown extends Component {
     this.handleClick();
   }
 
-  onDragStart = (e, index) => {
-    this.draggedItem = this.props.items[index];
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', e.target.parentNode);
-    e.dataTransfer.setDragImage(e.target.parentNode, 20, 20);
-  };
-
-  onDragOver = index => {
-    const draggedOverItem = this.props.items[index];
-
-    // if the item is dragged over itself, ignore
-    if (this.draggedItem === draggedOverItem) {
-      return;
-    }
-
-    // filter out the currently dragged item
-    let items = this.props.items.filter(item => item !== this.draggedItem);
-
-    // add the dragged item after the dragged over item
-    items.splice(index, 0, this.draggedItem);
-
-    this.setState({ items: items });
-  };
-
-  onDragEnd = () => {
-    this.draggedIdx = null;
-    this.props.onProjectReorder(this.state.items);
-  };
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleOutsideClick, false);
+  }
 
   handleProjectSelection = project => {
     this.setState({
@@ -105,21 +84,12 @@ class ProjectDropdown extends Component {
     }
 
     return suggestions.map((item, idx) => (
-      <div
-        className="menu-item-container"
-        key={idx}
-        onDragOver={() => this.onDragOver(idx)}>
+      <div className="menu-item-container" key={idx}>
         <div
           className="menu-item"
-          draggable="true"
-          onDragStart={e => this.onDragStart(e, idx)}
-          onDragEnd={this.onDragEnd}
           onClick={() => {
             this.handleProjectSelection(suggestions[idx].name);
           }}>
-          <div className="drag-icon-left">
-            <i className="material-icons md-18">drag_indicator</i>
-          </div>
           <div>
             {hasNewProject ? '+ Create a new project with ' : ''}
             {suggestions[idx].name}
@@ -136,10 +106,9 @@ class ProjectDropdown extends Component {
         ref={node => {
           this.node = node;
         }}>
-        <button onClick={this.handleClick} className="btn btn-dropdown">
+        <div className="input-project-selector mr-1" onClick={this.handleClick}>
           {this.state.projectSelectorValue}
-          <i class="material-icons">arrow_drop_down</i>
-        </button>
+        </div>
         {this.state.popupVisible && (
           <div className="menu-container noselect">
             <div className="menu">
@@ -147,7 +116,7 @@ class ProjectDropdown extends Component {
                 <input
                   onChange={this.onTextChange}
                   placeholder="Find project"></input>
-                <i class="material-icons md-24">search</i>
+                <i className="material-icons md-24">search</i>
               </div>
               <div className="menu-list">{this.renderSuggestions()}</div>
             </div>

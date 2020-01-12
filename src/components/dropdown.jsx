@@ -8,10 +8,7 @@ class Dropdown extends Component {
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
 
     this.state = {
-      popupVisible: false,
-      items: [],
-      suggestions: [],
-      projectSelectorValue: 'Select project'
+      popupVisible: false
     };
   }
 
@@ -37,60 +34,9 @@ class Dropdown extends Component {
     this.handleClick();
   }
 
-  onTextChange = e => {
-    const value = e.target.value;
-    let suggestions = [];
-
-    this.setState({ hasNewProject: false });
-
-    if (value.length === 0) {
-      suggestions = this.props.items;
-      this.setState({ suggestions });
-    }
-    if (value.length > 0) {
-      const regex = new RegExp(`^${value}`, 'i');
-      suggestions = this.props.items.sort().filter(v => regex.test(v.name));
-    }
-
-    if (suggestions.length === 0) {
-      suggestions.push({ name: value });
-      this.setState({ suggestions, hasNewProject: true });
-    } else {
-      this.setState({ suggestions });
-    }
-  };
-
-  renderSuggestions = () => {
-    let { suggestions } = this.state;
-    let { hasNewProject } = this.state;
-    if (suggestions.length === 0) {
-      suggestions = this.props.items;
-    }
-
-    return suggestions.map((item, idx) => (
-      <div
-        className="menu-item-container"
-        key={idx}
-        onDragOver={() => this.onDragOver(idx)}>
-        <div
-          className="menu-item"
-          draggable="true"
-          onDragStart={e => this.onDragStart(e, idx)}
-          onDragEnd={this.onDragEnd}
-          onClick={() => {
-            this.handleProjectSelection(suggestions[idx].name);
-          }}>
-          <div className="drag-icon-left">
-            <i className="material-icons md-18">drag_indicator</i>
-          </div>
-          <div>
-            {hasNewProject ? '+ Create a new project with ' : ''}
-            {suggestions[idx].name}
-          </div>
-        </div>
-      </div>
-    ));
-  };
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleOutsideClick, false);
+  }
 
   render() {
     return (
@@ -99,16 +45,19 @@ class Dropdown extends Component {
         ref={node => {
           this.node = node;
         }}>
+        <button
+          onClick={this.handleClick}
+          className={
+            this.props.btnInvisible
+              ? 'btn btn-icon btn-invisible'
+              : 'btn btn-icon'
+          }>
+          <i className="material-icons">{this.props.icon}</i>
+        </button>
         {this.state.popupVisible && (
-          <div className="menu-container noselect">
+          <div className="menu-container noselect pull-right">
             <div className="menu">
-              <div className="menu-input">
-                <input
-                  onChange={this.onTextChange}
-                  placeholder="Find project"></input>
-                <i class="material-icons md-24">search</i>
-              </div>
-              <div className="menu-list">{this.renderSuggestions()}</div>
+              <div className="menu-list">{this.props.children}</div>
             </div>
           </div>
         )}

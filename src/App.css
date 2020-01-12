@@ -7,10 +7,14 @@ Utilities
   --base-lighter: #222230;
   --base-darker: #151521;
   --white: #ffffff;
-  --shadow: rgba(68, 74, 80, 0.36);
-  --grey5: #5d646e;
   --concrete: #8999af;
   --accent: deeppink;
+  --primary: #3856ff;
+  --athens-gray: #e6eaee;
+  --danger: red;
+
+  /* Spacing */
+  --base-unit: 8px;
 }
 
 .noselect {
@@ -24,157 +28,151 @@ Utilities
   display: none;
 }
 
-body {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  color: var(--white);
-  background-color: var(--base);
-}
-
-h1 {
-  font-size: 24px;
-  margin: 16px 0 24px 0;
-}
-
-h2 {
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  margin: 0 0 16px 0;
-  color: var(--concrete);
-}
-
-.app {
-  width: 70%;
+.display-block {
   display: block;
-  margin: 24px auto;
-  margin-top: 24px;
-  max-width: 600px;
-  background-color: var(--base-lighter);
-  padding: 24px;
-  border-radius: 8px;
 }
 
-/* ================================
-Add new task input
-==================================*/
-.new-task-container {
-  padding: 0px;
-  margin: 0 0 48px 0;
-  /* background-color: var(--base); */
-  border-radius: 8px;
-  display: flex;
+.display-none {
+  display: none;
 }
 
-#add-task-input {
-  background-color: transparent;
-  border: none;
-  color: var(--white);
-  height: 48px;
-  padding: 0 16px;
-  font-size: 16px;
-  flex: 1 1 auto;
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
 }
 
-/* ================================
-Menu
-==================================*/
-
-.menu-container {
-  min-width: 200px;
-  width: auto;
-  height: auto;
-  background-color: var(--base-darker);
-  border-radius: 6px;
-  padding: 16px 8px 8px 8px;
-  box-shadow: var(--shadow);
-  position: absolute;
-  z-index: 1000;
-  margin-top: 2px;
+.pull-right {
+  right: 0;
+  left: auto;
 }
 
-.menu {
-  overflow: auto;
-  width: auto;
+/* Spacing */
+
+.mt-1 {
+  margin-top: calc(var(--base-unit) * 1);
+}
+.mt-2 {
+  margin-top: calc(var(--base-unit) * 2);
+}
+.mt-3 {
+  margin-top: calc(var(--base-unit) * 3);
+}
+.mt-6 {
+  margin-top: calc(var(--base-unit) * 6);
+}
+.mt-8 {
+  margin-top: calc(var(--base-unit) * 8);
+}
+.mt-16 {
+  margin-top: calc(var(--base-unit) * 16);
 }
 
-.menu-input {
-  padding: 0px 8px;
-  margin-bottom: 8px;
+.mb-1 {
+  margin-bottom: calc(var(--base-unit) * 1);
+}
+.mb-2 {
+  margin-bottom: calc(var(--base-unit) * 2);
+}
+.mb-3 {
+  margin-bottom: calc(var(--base-unit) * 3);
+}
+.mb-6 {
+  margin-bottom: calc(var(--base-unit) * 6);
+}
+.mb-8 {
+  margin-bottom: calc(var(--base-unit) * 8);
+}
+.mb-16 {
+  margin-bottom: calc(var(--base-unit) * 16);
 }
 
-.menu-input input {
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  height: 32px;
-  border-radius: 4px;
-  border: 1px solid var(--secondary-dark);
+.ml-1 {
+  margin-left: calc(var(--base-unit) * 1);
+}
+.ml-2 {
+  margin-left: calc(var(--base-unit) * 2);
+}
+.ml-3 {
+  margin-left: calc(var(--base-unit) * 3);
+}
+.ml-6 {
+  margin-left: calc(var(--base-unit) * 6);
+}
+.ml-8 {
+  margin-left: calc(var(--base-unit) * 8);
 }
 
-.menu-input i {
-  position: relative;
-  top: -27px;
-  color: var(--base);
+.mr-1 {
+  margin-right: calc(var(--base-unit) * 1);
+}
+.mr-2 {
+  margin-right: calc(var(--base-unit) * 2);
+}
+.mr-3 {
+  margin-right: calc(var(--base-unit) * 3);
+}
+.mr-6 {
+  margin-right: calc(var(--base-unit) * 6);
+}
+.mr-8 {
+  margin-right: calc(var(--base-unit) * 8);
 }
 
-.menu-list {
-}
-
-.menu-item-container {
-}
-
-.menu-item {
-  display: flex;
-  height: 32px;
-  line-height: 32px;
-  border-radius: 4px;
-  padding: 0 8px 0 8px;
-}
-
-.menu-item:hover {
-  background-color: var(--base-lighter);
-}
-
-.menu-item > div {
-}
-
-.popover-container {
-  display: inline;
-  position: relative;
-}
-
-ul {
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
-}
-
-/* ================================
-Button styles
-==================================*/
+/* Button styles */
 
 .btn {
   height: 32px;
-  background-color: var(--base-lighter);
+  background-color: var(--concrete);
   border-radius: 4px;
   padding: 4px 8px;
+  display: block;
 }
 
 .btn-delete {
 }
 
 .btn-icon {
+  background-color: transparent;
+  border: 2px solid var(--athens-gray);
 }
 
 .btn-icon:hover {
   color: var(--accent);
 }
 
+.btn-icon i {
+  color: var(--concrete);
+}
+
+.btn-invisible {
+  background-color: transparent;
+  border: none;
+}
+
+.btn-invisible:hover {
+  background-color: var(--athens-gray);
+}
+
 .btn-primary {
-  background-color: var(--accent);
+  background-color: transparent;
+  border-radius: 50px;
+  border: 2px solid var(--athens-gray);
+  color: var(--primary);
+  padding: 4px 18px;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border-radius: 50px;
+  border: 2px solid var(--athens-gray);
+  color: var(--concrete);
+  padding: 4px 18px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 .fr {
@@ -198,9 +196,7 @@ Button styles
 
 .btn-dropdown {
   height: 32px;
-  margin-top: 8px;
-  margin-right: 16px;
-  background-color: var(--base-lighter);
+  background-color: var(--athens-gray);
   border-radius: 4px;
   padding: 0 0 0 8px;
   line-height: 32px;
@@ -218,6 +214,185 @@ button {
   /* show a hand cursor on hover; some argue that we
   should keep the default arrow cursor for buttons */
   cursor: pointer;
+}
+
+.project-delete {
+  color: var(--danger);
+}
+
+.input-project-selector {
+}
+
+.input-project-selector:after {
+  content: none;
+}
+
+/* ================================
+Structure
+==================================*/
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--base);
+  background-color: var(--white);
+}
+
+.app {
+  display: block;
+  border-radius: 8px;
+}
+
+.header {
+  padding: 128px 64px 0 64px;
+  border-bottom: 1px solid var(--athens-gray);
+  display: flex;
+}
+
+.header > .col-1 {
+  display: flex;
+  flex: 1 auto;
+  justify-content: flex-start;
+}
+.header > .col-2 {
+  display: flex;
+  flex: 1 auto;
+  justify-content: flex-end;
+}
+
+.main {
+  padding: 0 64px;
+}
+
+/* ================================
+Typography
+==================================*/
+
+h1 {
+  font-size: 32px;
+  font-weight: 400;
+  margin: 0 0 24px 0;
+}
+
+/* .header h1 {
+  margin-top: 128px;
+} */
+
+h2 {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin: 0 0 16px 0;
+  color: var(--concrete);
+}
+
+/* ================================
+Add new task input
+==================================*/
+#add-task-input {
+  background-color: var(--athens-gray);
+  border: none;
+  color: var(--base);
+  height: 48px;
+  padding: 0 16px;
+  font-size: 16px;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ================================
+Menu
+==================================*/
+
+.menu-container {
+  min-width: 200px;
+  width: auto;
+  height: auto;
+  background-color: var(--white);
+  padding: 8px 0px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 4px, rgba(0, 0, 0, 0.06) 0px 2px 12px;
+  position: absolute;
+  z-index: 1000;
+  margin-top: 2px;
+  text-align: left;
+  border-radius: 8px;
+}
+
+.menu {
+  overflow: auto;
+  width: auto;
+}
+
+.menu-input {
+  padding: 0px 8px;
+  margin-bottom: 8px;
+}
+
+.menu-input input {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  height: 32px;
+  border-radius: 4px;
+  border: none;
+  background-color: var(--athens-gray);
+}
+
+.menu-input i {
+  position: relative;
+  top: -27px;
+  color: var(--white);
+}
+
+.menu-list {
+}
+
+.menu-item-container {
+}
+
+.menu-item {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 8px 0 8px;
+}
+
+.menu-item > div {
+  float: left;
+}
+
+/* .menu-item > div:last-child {
+  float: right;
+} */
+
+.icon-left {
+  margin-right: 4px;
+  cursor: move;
+}
+.icon-right {
+  display: none;
+  color: var(--danger);
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background-color: var(--athens-gray);
+}
+
+.menu-item:hover .icon-right {
+  display: inline;
+}
+
+.popover-container {
+  display: block;
+}
+
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
 }
 
 /* ================================
@@ -246,22 +421,28 @@ Item task
   margin: 0 0 0 0;
 }
 
-.task-list .task-item:last-child {
-  margin-bottom: 0px;
-}
-
 .task-list-container {
   margin: 0 0 0 0;
+}
+
+.task-item-editmode {
+  padding: 8px 0;
+  margin-left: 36px;
+  display: flex;
 }
 
 .inline-task-edit {
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: var(--white);
-  background-color: transparent;
+  color: var(--base);
+  background-color: var(--athens-gray);
   border: none;
   width: 100%;
+  padding: 0px 8px;
+  border-radius: 4px;
+  position: relative;
+  left: -8px;
 }
 
 .checker {
@@ -278,12 +459,12 @@ Item task
   top: 0px;
   height: 18px;
   width: 18px;
-  border: 2px solid var(--grey5);
-  border-radius: 4px;
+  border: 1px solid var(--concrete);
   cursor: pointer;
   margin-right: 16px;
   outline: none;
-  top: -10px;
+  top: 8px;
+  padding: 0px;
 }
 
 .form-radio:checked::before {
@@ -349,8 +530,13 @@ Strikethrough animation
 
 .task-item {
   position: relative;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
+  /* padding-bottom: 24px; */
+  /* margin-bottom: 16px; */
+  border-bottom: 1px solid var(--athens-gray);
+}
+
+.task-item:last-child {
+  margin-bottom: 48px;
 }
 
 .task-actions {
@@ -362,13 +548,24 @@ Strikethrough animation
 }
 
 .task-details {
+  display: flex;
 }
+
+/* .task-details > div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: baseline;
+  align-content: stretch;
+} */
 
 .task-content {
   display: inline-block;
+  flex-grow: 1;
 }
 .task-content span {
-  margin-bottom: 4px;
+  /* margin-bottom: 4px; */
   display: inline-block;
 }
 
@@ -378,17 +575,23 @@ Strikethrough animation
 .task-content-age {
   font-size: 12px;
   font-weight: 700;
-  color: var(--grey5);
+  color: rgb(0, 0, 0);
+  text-transform: none;
+  padding: 4px 4px;
+  /* background-color: rgba(138, 43, 226, 0.2); */
+  border-radius: 100px;
+  display: table;
 }
 
 .task-content-project {
   font-size: 12px;
   font-weight: 700;
-  color: rgb(138, 43, 226);
-  text-transform: uppercase;
-  padding: 8px 16px;
-  background-color: rgba(138, 43, 226, 0.2);
+  color: rgb(0, 0, 0);
+  text-transform: none;
+  padding: 4px 4px;
+  /* background-color: rgba(138, 43, 226, 0.2); */
   border-radius: 100px;
+  display: table;
 }
 
 .task-action-menu {
@@ -408,7 +611,7 @@ Material Icons
   font-style: normal;
   font-size: 24px; /* Preferred icon size */
   display: inline-block;
-  /* line-height: 1; */
+  line-height: 1;
   text-transform: none;
   letter-spacing: normal;
   word-wrap: normal;
@@ -458,3 +661,35 @@ Material Icons
 .material-icons.md-light.md-inactive {
   color: rgba(255, 255, 255, 0.3);
 }
+
+/* ================================
+Modal
+==================================*/
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+.modal-main {
+  position: fixed;
+  background: white;
+  width: 80%;
+  max-width: 500px;
+  height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+
+  z-index: 1000;
+  padding: 48px;
+}
+
+/* ================================
+Nav dropdown
+==================================*/

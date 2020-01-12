@@ -39,33 +39,22 @@ class NewTaskModule extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="new-task-container">
-          {/* <div>
-            <button className="btn btn-icon">
-              <i class="material-icons">add</i> New task
-            </button>
-          </div> */}
-          <div>
-            <input
-              id="add-task-input"
-              type="text"
-              placeholder="Add task"
-              value={this.state.taskInputValue}
-              onKeyPress={this.handleKeyPress}
-              onChange={evt => this.updateTaskInputValue(evt)}></input>
-            <div className="fr">
-              <ProjectDropdown
-                items={this.props.items}
-                onProjectSelection={this.handleProjectSelection}
-                onProjectReorder={this.handleProjectReorder}></ProjectDropdown>
-              <button
-                onClick={this.handleCreateTask}
-                className="btn btn-primary">
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
+        <input
+          id="add-task-input"
+          className="mb-2"
+          type="text"
+          placeholder="Add task"
+          value={this.state.taskInputValue}
+          onKeyPress={this.handleKeyPress}
+          onChange={evt => this.updateTaskInputValue(evt)}></input>
+
+        <ProjectDropdown
+          items={this.props.items}
+          onProjectSelection={this.handleProjectSelection}></ProjectDropdown>
+
+        <button onClick={this.handleCreateTask} className="btn btn-primary">
+          Add
+        </button>
       </React.Fragment>
     );
   }

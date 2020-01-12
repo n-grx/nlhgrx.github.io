@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import Dropdown from './dropdown';
+import DropdownItem from './dropdownitem';
+import ProjectDropdown from './projectdropdown';
 
 class Task extends Component {
-  state = {
-    editMode: false,
-    taskInputValue: this.props.children,
-    isComplete: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      editMode: false,
+      taskInputValue: this.props.children,
+      isComplete: false
+    };
+  }
 
   onHandleEdit = () => {
     this.setState({ editMode: true });
   };
 
   updateTaskInputValue(evt) {
+    let domNode = ReactDOM.findDOMNode(this);
     this.setState({
-      taskInputValue: evt.target.value
+      taskInputValue: domNode.innerText
     });
   }
 
@@ -24,7 +32,7 @@ class Task extends Component {
     }
   };
 
-  onHandleDelete = () => {
+  handleDelete = () => {
     this.props.onDelete(this.props.id);
   };
 
@@ -40,7 +48,7 @@ class Task extends Component {
     const today = new Date();
     let age = Math.floor((today - created) / (1000 * 60 * 60 * 24));
     if (age < 2) {
-      return 'Created today';
+      return 'Today';
     } else if (age / 7 >= 1) {
       return Math.floor(age / 7) + 'w ago';
     } else {
@@ -48,24 +56,28 @@ class Task extends Component {
     }
   };
 
+  handleProjectSelection = project => {
+    this.props.onUpdateProject(this.props.id, project);
+  };
+
   render() {
     return (
       <React.Fragment>
         <li className="task-item">
-          <div className="task-details">
-            <div className="checker">
-              <input
-                type="checkbox"
-                className="form-radio"
-                id="check-one"
-                onClick={this.handleOnCompleteTask}></input>
-            </div>
-            <div
-              className={`task-content ${
-                this.state.isComplete ? 'strikethrough' : ''
-              }`}>
-              <span onClick={this.onHandleEdit}>
-                {this.state.editMode === true ? (
+          <div>
+            <div className="task-details">
+              <div className="checker">
+                <input
+                  type="checkbox"
+                  className="form-radio mr-3 "
+                  id="check-one"
+                  onClick={this.handleOnCompleteTask}></input>
+              </div>
+              <div
+                className={`task-content ${
+                  this.state.isComplete ? 'strikethrough' : ''
+                }`}>
+                {this.state.editMode ? (
                   <input
                     className="inline-task-edit"
                     type="text"
@@ -74,20 +86,25 @@ class Task extends Component {
                     onKeyPress={this.handleKeyPress}
                     onChange={evt => this.updateTaskInputValue(evt)}></input>
                 ) : (
-                  this.props.children
+                  <span onClick={this.onHandleEdit}>{this.props.children}</span>
                 )}
-              </span>
-              <div className="task-content-bottom task-content-age">
-                {this.calculateTaskAge(this.props.created)}
               </div>
             </div>
-          </div>
-          <div className="task-actions">
-            <div className="task-content-project">{this.props.projects}</div>
-            <div className="task-action-menu">
-              <button className="btn btn-icon f">
-                <i class="material-icons">more_horiz</i>
-              </button>
+            <div className="task-actions">
+              <div className="task-content-project mr-2">
+                {this.props.projects}
+              </div>
+              <div className="  task-content-age">
+                {this.calculateTaskAge(this.props.created)}
+              </div>
+
+              <div className="task-action-menu">
+                <Dropdown icon="more_horiz" btnInvisible={true}>
+                  <DropdownItem triggerAction={this.handleDelete}>
+                    Delete
+                  </DropdownItem>
+                </Dropdown>
+              </div>
             </div>
           </div>
         </li>

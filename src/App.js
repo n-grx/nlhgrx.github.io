@@ -1,17 +1,24 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
 import Task from './components/task';
 import NewTaskModule from './components/newTaskModule';
-import Button from './components/button';
-import ProjectDropdown from './components/projectdropdown';
+import Dropdown from './components/dropdown';
+import DropdownItem from './components/dropdownitem';
+import Modal from './components/modal';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mit: [],
+      pageTitle: 'All tasks',
       tasks: [],
-      projects: []
+      projects: [],
+      modals: {
+        newTask: { visible: false },
+        navigation: { visible: false },
+        priority: { visible: false }
+      }
     };
   }
 
@@ -21,19 +28,17 @@ class App extends Component {
   });
 
   componentDidMount() {
-    fetch('http://localhost:5000/api/getincompletetasks', {
+    fetch('http://localhost:5000/api/task/getincomplete', {
       headers: this.state.myHeaders
     })
       .then(response => {
         return response.json();
       })
       .then(data => {
-        this.setState({ mit: data[0] });
-        data.splice(0, 1);
         this.setState({ tasks: data });
       });
 
-    fetch('http://localhost:5000/api/getprojects', {
+    fetch('http://localhost:5000/api/projects/getall ', {
       headers: this.state.myHeaders
     })
       .then(response => {
@@ -42,12 +47,10 @@ class App extends Component {
       .then(data => {
         this.setState({ projects: data });
       });
-
-    // this.setState({ projectSelectorValue : initialProject });
   }
 
   reorderProjects = object => {
-    fetch('http://localhost:5000/api/updateprojects', {
+    fetch('http://localhost:5000/api/projects/order ', {
       method: 'POST',
       headers: new Headers(),
       body: JSON.stringify({
@@ -58,15 +61,13 @@ class App extends Component {
         return response.json();
       })
       .then(data => {
-        let newMit = data[1][0];
-        data[1].splice(0, 1);
-        this.setState({ mit: newMit, tasks: data[1], projects: data[0] });
+        this.setState({ tasks: data[1], projects: data[0] });
       });
   };
 
   // Send the new task to the server and update state.tasks with the new task
   createTask = (task, project) => {
-    fetch('http://localhost:5000/api/createtask', {
+    fetch('http://localhost:5000/api/task/create', {
       method: 'POST',
       headers: new Headers(),
       body: JSON.stringify({
@@ -85,9 +86,9 @@ class App extends Component {
     });
   };
 
-  // Update task
-  updateTask = (taskIDX, taskValue) => {
-    fetch('http://localhost:5000/api/edittask', {
+  // Update task value
+  updateTaskValue = (taskIDX, taskValue) => {
+    fetch('http://localhost:5000/api/task/edit/value', {
       method: 'POST',
       headers: new Headers(),
       body: JSON.stringify({
@@ -99,15 +100,33 @@ class App extends Component {
         return response.json();
       })
       .then(data => {
-        this.setState({ mit: data[0] });
-        data.splice(0, 1);
         this.setState({ tasks: data });
       });
   };
 
-  // Delete the new task to the server and update state.tasks with the new task
-  deleteFromServer = taskId => {
-    fetch('http://localhost:5000/api/delete/' + taskId, {
+  // Update task project
+  updateTaskProject = (taskIDX, project) => {
+    fetch('http://localhost:5000/api/task/edit/projects', {
+      method: 'POST',
+      headers: new Headers(),
+      body: JSON.stringify({
+        taskid: taskIDX,
+        project: project
+      })
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        const tasks = data[0];
+        const projects = data[1];
+        this.setState({ tasks: tasks, projects: projects });
+      });
+  };
+
+  // Delete the task from the server
+  deleteTask = taskId => {
+    fetch('http://localhost:5000/api/task/delete/' + taskId, {
       method: 'POST',
       headers: new Headers()
     })
@@ -119,9 +138,25 @@ class App extends Component {
       });
   };
 
+  // Delete project
+  deleteProject = e => {
+    const projectIDX = e.currentTarget.value;
+
+    fetch('http://localhost:5000/api/projects/delete/' + projectIDX, {
+      method: 'POST',
+      headers: new Headers()
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        this.setState({ tasks: data[0], projects: data[1] });
+      });
+  };
+
   // Complete task
   completeTask = taskIDX => {
-    fetch('http://localhost:5000/api/completetask', {
+    fetch('http://localhost:5000/api/task/complete', {
       method: 'POST',
       headers: new Headers(),
       body: JSON.stringify({
@@ -133,10 +168,8 @@ class App extends Component {
       })
       .then(data => {
         if (data.length < 1) {
-          this.setState({ tasks: false, mit: false });
+          this.setState({ tasks: false });
         } else {
-          this.setState({ mit: data[0] });
-          data.splice(0, 1);
           this.setState({ tasks: data });
         }
       });
@@ -151,9 +184,7 @@ class App extends Component {
         return response.json();
       })
       .then(data => {
-        this.setState({ mit: data[0] });
-        data.splice(0, 1);
-        this.setState({ tasks: data });
+        this.setState({ projects: data[0], tasks: data[1] });
       });
   };
 
@@ -161,59 +192,215 @@ class App extends Component {
     this.createTask(task, project);
   };
 
+  // Re-order project priority
+  onDragStart = (e, index) => {
+    console.log('Start');
+    this.draggedItem = this.state.projects[index];
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target.parentNode);
+    e.dataTransfer.setDragImage(e.target.parentNode, 20, 20);
+  };
+
+  onDragOver = index => {
+    console.log(index);
+    const draggedOverItem = this.state.projects[index];
+    // if the item is dragged over itself, ignore
+    if (this.draggedItem === draggedOverItem) {
+      return;
+    }
+    // filter out the currently dragged item
+    let items = this.state.projects.filter(item => item !== this.draggedItem);
+    // add the dragged item after the dragged over item
+    items.splice(index, 0, this.draggedItem);
+    this.setState({ projects: items });
+  };
+
+  onDragEnd = () => {
+    console.log('End');
+    this.draggedIdx = null;
+    this.reorderProjects(this.state.projects);
+  };
+
+  // Control modal visibility
+  showModal = e => {
+    let { modals } = this.state;
+    let modal = e.target.dataset.modal;
+    modals[modal].visible = true;
+    this.setState({ modals });
+  };
+
+  hideModal = () => {
+    let { modals } = this.state;
+    Object.keys(modals).map(modal => (modals[modal].visible = false));
+    this.setState({ modals });
+  };
+
+  // ==================================================
+
   render() {
+    //
+    const Page = () => {
+      return this.props.children;
+    };
+
+    const Header = () => {
+      return (
+        <div className="header mb-6">
+          <div className="col-1">
+            <h1 data-modal={'navigation'} onClick={this.showModal}>
+              All tasks
+            </h1>
+          </div>
+          <div className="col-2">
+            <button
+              className="btn btn-primary mr-2"
+              data-modal={'newTask'}
+              onClick={this.showModal}>
+              New task
+            </button>
+            <Dropdown icon="more_horiz" btnInvisible={false}>
+              <DropdownItem triggerAction={this.restoretestData}>
+                Restore test data
+              </DropdownItem>
+            </Dropdown>
+          </div>
+          <Modal
+            show={this.state.modals.navigation.visible}
+            hide={this.hideModal}
+            heading={'Switch projects'}>
+            <ul>
+              <li>
+                <Link to={'/'} onClick={this.hideModal}>
+                  All tasks
+                </Link>
+              </li>
+              <li>
+                <Link to={'completed'} onClick={this.hideModal}>
+                  Completed
+                </Link>
+              </li>
+            </ul>
+            <hr></hr>
+            <div className="menu-list">
+              {this.state.projects.map((project, idx) => (
+                <div
+                  className="menu-item-container"
+                  key={idx}
+                  onDragOver={() => this.onDragOver(idx)}>
+                  <div
+                    className="menu-item"
+                    draggable="true"
+                    onDragStart={e => this.onDragStart(e, idx)}
+                    onDragEnd={this.onDragEnd}>
+                    <div className="icon-left">
+                      <i className="material-icons md-18">drag_indicator</i>
+                    </div>
+                    <div>
+                      <Link to={`/${project.name}`} onClick={this.hideModal}>
+                        {project.name}
+                      </Link>
+                    </div>
+                    <div className="icon-right">
+                      <button value={idx} onClick={this.deleteProject}>
+                        <i className="material-icons md-18">delete</i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Modal>
+          <Modal
+            show={this.state.modals.newTask.visible}
+            hide={this.hideModal}
+            heading={'New task'}>
+            <NewTaskModule
+              items={this.state.projects}
+              onCreateTask={this.onHandleCreateTask}
+              onReorderProjects={this.reorderProjects}></NewTaskModule>
+          </Modal>
+        </div>
+      );
+    };
+
+    const renderTask = task => {
+      return (
+        <Task
+          key={task.id}
+          id={task.id}
+          projects={task.projects}
+          allProjects={this.state.projects}
+          created={task.created}
+          onDelete={this.deleteTask}
+          onUpdateTask={this.updateTaskValue}
+          onUpdateProject={this.updateTaskProject}
+          onCompleteTask={this.completeTask}>
+          {task.value}
+        </Task>
+      );
+    };
+
+    const Inbox = () => {
+      const { tasks } = this.state;
+
+      return tasks.length < 1 ? (
+        <p>Looks like you're done for the day</p>
+      ) : (
+        <React.Fragment>
+          <div className="task-list-container">
+            <h2>Everything else</h2>
+            <ul className="task-list">{tasks.map(task => renderTask(task))}</ul>
+          </div>
+        </React.Fragment>
+      );
+    };
+
+    const renderProjectView = project => {
+      const { tasks } = this.state;
+      const filteredTasks = tasks.filter(task => {
+        return task.projects === project;
+      });
+
+      return filteredTasks.length < 1 ? (
+        <p>This project has no tasks</p>
+      ) : (
+        <React.Fragment>
+          <div className="task-list-container">
+            <ul className="task-list">
+              {filteredTasks.map(task => renderTask(task))}
+            </ul>
+          </div>
+        </React.Fragment>
+      );
+    };
+
     return (
-      <div className="app">
-        <h1>
-          Inbox
-          <button className="btn btn-icon fr" onClick={this.restoretestData}>
-            <i class="material-icons">more_horiz</i>
-          </button>
-        </h1>
+      <div className={this.state.show ? 'app no-scroll' : 'app'}>
+        <Router>
+          <Header></Header>
+          <div className="main">
+            <Switch>
+              {this.state.projects.map((project, idx) => (
+                <Route
+                  key={idx}
+                  path={`/${project.name}`}
+                  heading={project.name}>
+                  {renderProjectView(project.name)}
+                </Route>
+              ))}
 
-        <NewTaskModule
-          items={this.state.projects}
-          onCreateTask={this.onHandleCreateTask}
-          onReorderProjects={this.reorderProjects}></NewTaskModule>
+              <Route path="/completed">
+                <Page>
+                  <h1>Hello</h1>
+                </Page>
+              </Route>
 
-        {this.state.mit === false ? (
-          <p>Looks like you're done for the day</p>
-        ) : (
-          <React.Fragment>
-            <div className="mit-task-container">
-              <h2>This is your MIT</h2>
-              <ul className="mit-task">
-                <Task
-                  key={this.state.mit.id}
-                  id={this.state.mit.id}
-                  projects={this.state.mit.projects}
-                  created={this.state.mit.created}
-                  onDelete={this.deleteFromServer}
-                  onUpdateTask={this.updateTask}
-                  onCompleteTask={this.completeTask}>
-                  {this.state.mit.value}
-                </Task>
-              </ul>
-            </div>
-            <div className="task-list-container">
-              <h2>Everything else</h2>
-              <ul className="task-list">
-                {this.state.tasks.map(task => (
-                  <Task
-                    key={task.id}
-                    id={task.id}
-                    projects={task.projects}
-                    created={task.created}
-                    onDelete={this.deleteFromServer}
-                    onUpdateTask={this.updateTask}
-                    onCompleteTask={this.completeTask}>
-                    {task.value}
-                  </Task>
-                ))}
-              </ul>
-            </div>
-          </React.Fragment>
-        )}
+              <Route path="/">
+                <Inbox></Inbox>
+              </Route>
+            </Switch>
+          </div>
+        </Router>
       </div>
     );
   }
