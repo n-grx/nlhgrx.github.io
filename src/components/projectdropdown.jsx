@@ -11,13 +11,13 @@ class ProjectDropdown extends Component {
       popupVisible: false,
       items: [],
       suggestions: [],
-      projectSelectorValue: 'Select project'
+      projectSelectorValue: 'Select project...'
     };
   }
 
-  componentDidMount() {
-    this.setState({ projectSelectorValue: this.props.projects });
-  }
+  // componentDidMount() {
+  //   this.setState({ projectSelectorValue: this.props.projects });
+  // }
 
   handleClick() {
     if (!this.state.popupVisible) {

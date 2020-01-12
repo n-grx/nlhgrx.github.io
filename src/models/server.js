@@ -43,16 +43,22 @@ updateTaskMaster = (completedTasks, incompleteTasks, projects) => {
 calculateTaskAge = date => {
   // get the age of the task in days
   let age = Math.floor((new Date() - new Date(date)) / (1000 * 60 * 60 * 24));
-  let score;
-  if (age > 60) {
-    score = 3;
-  } else if (age > 10) {
-    score = 2;
-  } else if (age > 7) {
-    score = 1;
-  } else {
-    score = 0;
+  let weekAge = age * 7;
+  let score = 1;
+
+  for (i = 0; i < weekAge; i++) {
+    score = score + 0.5;
   }
+
+  // if (age > 60) {
+  //   score = 3;
+  // } else if (age > 10) {
+  //   score = 2;
+  // } else if (age > 7) {
+  //   score = 1;
+  // } else {
+  //   score = 0;
+  // }
 
   return score;
 };

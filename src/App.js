@@ -341,12 +341,19 @@ class App extends Component {
     };
 
     const Inbox = () => {
-      const { tasks } = this.state;
+      let { tasks } = this.state;
+      const mit = tasks[0];
+      tasks.splice(0, 1);
 
       return tasks.length < 1 ? (
         <p>Looks like you're done for the day</p>
       ) : (
         <React.Fragment>
+          <div className="mit-task-container">
+            <h2>This is you MIT</h2>
+            <ul className="task-list">{renderTask(mit)}</ul>
+          </div>
+
           <div className="task-list-container">
             <h2>Everything else</h2>
             <ul className="task-list">{tasks.map(task => renderTask(task))}</ul>

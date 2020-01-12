@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import Dropdown from './dropdown';
 import DropdownItem from './dropdownitem';
-import ProjectDropdown from './projectdropdown';
 
 class Task extends Component {
   constructor(props) {
     super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+    this.handleOutsideClick = this.handleOutsideClick.bind(this);
+
     this.state = {
       editMode: false,
       taskInputValue: this.props.children,
@@ -14,14 +16,43 @@ class Task extends Component {
     };
   }
 
+  handleClick() {
+    if (!this.state.editMode) {
+      // attach/remove event handler
+      document.addEventListener('click', this.handleOutsideClick, false);
+    } else {
+      document.removeEventListener('click', this.handleOutsideClick, false);
+    }
+
+    if (this.state.editMode) {
+      this.props.onUpdateTask(this.props.id, this.state.taskInputValue);
+    }
+
+    this.setState(prevState => ({
+      editMode: !prevState.editMode
+    }));
+  }
+
+  handleOutsideClick(e) {
+    // ignore clicks on the component itself
+    if (this.node.contains(e.target)) {
+      return;
+    }
+
+    this.handleClick();
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleOutsideClick, false);
+  }
+
   onHandleEdit = () => {
     this.setState({ editMode: true });
   };
 
   updateTaskInputValue(evt) {
-    let domNode = ReactDOM.findDOMNode(this);
     this.setState({
-      taskInputValue: domNode.innerText
+      taskInputValue: evt.target.value
     });
   }
 
@@ -63,48 +94,49 @@ class Task extends Component {
   render() {
     return (
       <React.Fragment>
-        <li className="task-item">
-          <div>
-            <div className="task-details">
-              <div className="checker">
-                <input
-                  type="checkbox"
-                  className="form-radio mr-3 "
-                  id="check-one"
-                  onClick={this.handleOnCompleteTask}></input>
-              </div>
-              <div
-                className={`task-content ${
-                  this.state.isComplete ? 'strikethrough' : ''
-                }`}>
-                {this.state.editMode ? (
-                  <input
-                    className="inline-task-edit"
-                    type="text"
-                    placeholder="Add task"
-                    value={this.state.taskInputValue}
-                    onKeyPress={this.handleKeyPress}
-                    onChange={evt => this.updateTaskInputValue(evt)}></input>
-                ) : (
-                  <span onClick={this.onHandleEdit}>{this.props.children}</span>
-                )}
-              </div>
+        <li className="task-item mb-1">
+          <div className="task-details">
+            <div className="checker">
+              <input
+                type="checkbox"
+                className="form-radio mr-3 "
+                id="check-one"
+                onClick={this.handleOnCompleteTask}></input>
             </div>
-            <div className="task-actions">
-              <div className="task-content-project mr-2">
-                {this.props.projects}
-              </div>
-              <div className="  task-content-age">
-                {this.calculateTaskAge(this.props.created)}
-              </div>
+            <div
+              ref={node => {
+                this.node = node;
+              }}
+              className={`task-content ${
+                this.state.isComplete ? 'strikethrough' : ''
+              }`}>
+              {this.state.editMode ? (
+                <input
+                  className="inline-task-edit"
+                  type="text"
+                  placeholder="Add task"
+                  value={this.state.taskInputValue}
+                  onKeyPress={this.handleKeyPress}
+                  onChange={evt => this.updateTaskInputValue(evt)}></input>
+              ) : (
+                <span onClick={this.handleClick}>{this.props.children}</span>
+              )}
+            </div>
+          </div>
+          <div className="task-actions">
+            <div className="task-content-project mr-2">
+              {this.props.projects}
+            </div>
+            <div className="  task-content-age">
+              {this.calculateTaskAge(this.props.created)}
+            </div>
 
-              <div className="task-action-menu">
-                <Dropdown icon="more_horiz" btnInvisible={true}>
-                  <DropdownItem triggerAction={this.handleDelete}>
-                    Delete
-                  </DropdownItem>
-                </Dropdown>
-              </div>
+            <div className="task-action-menu">
+              <Dropdown icon="more_horiz" btnInvisible={true}>
+                <DropdownItem triggerAction={this.handleDelete}>
+                  Delete
+                </DropdownItem>
+              </Dropdown>
             </div>
           </div>
         </li>
