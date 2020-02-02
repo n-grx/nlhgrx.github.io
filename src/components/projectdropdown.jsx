@@ -92,7 +92,12 @@ class ProjectDropdown extends Component {
           }}>
           <div>
             {hasNewProject ? '+ Create a new project with ' : ''}
-            {suggestions[idx].name}
+            <span
+              className={
+                suggestions.length === 1 ? 'new-project-suggestion' : ''
+              }>
+              {suggestions[idx].name}
+            </span>
           </div>
         </div>
       </div>
@@ -102,12 +107,16 @@ class ProjectDropdown extends Component {
   render() {
     return (
       <div
-        className="popover-container"
+        className="popover-container mb-2"
         ref={node => {
           this.node = node;
         }}>
-        <div className="input-project-selector mr-1" onClick={this.handleClick}>
+        <div
+          className="input-project-selector mr-1"
+          onClick={this.handleClick}
+          placeholder="Select project...">
           {this.state.projectSelectorValue}
+          <i className="material-icons md-18">arrow_drop_down</i>
         </div>
         {this.state.popupVisible && (
           <div className="menu-container noselect">
@@ -116,7 +125,7 @@ class ProjectDropdown extends Component {
                 <input
                   onChange={this.onTextChange}
                   placeholder="Find project"></input>
-                <i className="material-icons md-24">search</i>
+                <i className="material-icons md-18">search</i>
               </div>
               <div className="menu-list">{this.renderSuggestions()}</div>
             </div>

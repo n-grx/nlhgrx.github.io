@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+// import ReactDOM from 'react-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams
+} from 'react-router-dom';
 import './App.css';
 import Task from './components/task';
 import NewTaskModule from './components/newTaskModule';
@@ -127,6 +134,7 @@ class App extends Component {
   // ===================================================================
 
   componentDidMount() {
+    console.log(React.version);
     this.fetchData();
   }
 
@@ -385,93 +393,7 @@ class App extends Component {
   // ==================================================
 
   render() {
-    console.log('Start of render');
-    console.log(this.state.tasks);
-
-    const Header = () => {
-      return (
-        <div className="header mb-6">
-          <div className="col-1">
-            <h1 data-modal={'navigation'} onClick={this.showModal}>
-              All tasks
-            </h1>
-          </div>
-          <div className="col-2">
-            <button
-              className="btn btn-primary mr-2"
-              data-modal={'newTask'}
-              onClick={this.showModal}>
-              New task
-            </button>
-            <Dropdown icon="more_horiz" btnInvisible={false}>
-              <DropdownItem triggerAction={this.restoretestData}>
-                Restore test data
-              </DropdownItem>
-            </Dropdown>
-          </div>
-          <Modal
-            show={this.state.modals.navigation.visible}
-            hide={this.hideModal}
-            heading={'Switch projects'}>
-            <ul>
-              <li>
-                <Link to={'/'} onClick={this.hideModal}>
-                  All tasks
-                </Link>
-              </li>
-              <li>
-                <Link to={'completed'} onClick={this.hideModal}>
-                  Completed
-                </Link>
-              </li>
-            </ul>
-            <hr></hr>
-            <div className="menu-list">
-              {this.state.projects
-                ? this.state.projects.map((project, idx) => (
-                    <div
-                      className="menu-item-container"
-                      key={idx}
-                      onDragOver={() => this.onDragOver(idx)}>
-                      <div
-                        className="menu-item"
-                        draggable="true"
-                        onDragStart={e => this.onDragStart(e, idx)}
-                        onDragEnd={this.onDragEnd}>
-                        <div className="icon-left">
-                          <i className="material-icons md-18">drag_indicator</i>
-                        </div>
-                        <div>
-                          <Link
-                            to={`/${project.name}`}
-                            onClick={this.hideModal}>
-                            {project.name}
-                          </Link>
-                        </div>
-                        <div className="icon-right">
-                          <button value={idx} onClick={this.deleteProject}>
-                            <i className="material-icons md-18">delete</i>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                : 'Add a task to create your first project.'}
-            </div>
-          </Modal>
-          <Modal
-            show={this.state.modals.newTask.visible}
-            hide={this.hideModal}
-            heading={'New task'}>
-            <NewTaskModule
-              items={this.state.projects}
-              onCreateTask={this.createTask}
-              onReorderProjects={this.reorderProjects}></NewTaskModule>
-          </Modal>
-        </div>
-      );
-    };
-
+    const Header = () => {};
     const renderTask = task => {
       return (
         <Task
@@ -491,7 +413,6 @@ class App extends Component {
 
     const Inbox = () => {
       let tasks = [...this.state.tasks];
-      console.log(tasks);
       let mit;
 
       if (tasks.length < 1) {
@@ -506,9 +427,6 @@ class App extends Component {
       } else {
         mit = tasks[0];
         tasks.shift();
-
-        console.log([this.state.tasks, tasks]);
-
         return (
           <React.Fragment>
             <div className="mit-task-container">
@@ -528,13 +446,10 @@ class App extends Component {
     };
 
     const renderProjectView = project => {
-      const tasks2 = this.state.tasks;
-      const filteredTasks = tasks2.filter(task => {
+      const tasks = [...this.state.tasks];
+      const filteredTasks = tasks.filter(task => {
         return task.projects === project;
       });
-
-      // console.log([tasks2, filteredTasks]);
-
       return filteredTasks.length < 1 ? (
         <p>This project has no tasks</p>
       ) : (
@@ -554,7 +469,7 @@ class App extends Component {
           <div className="header mb-6">
             <div className="col-1">
               <h1 data-modal={'navigation'} onClick={this.showModal}>
-                All tasks
+                {this.state.pageTitle}
               </h1>
             </div>
             <div className="col-2">

@@ -221,17 +221,16 @@ button {
 }
 
 .input-project-selector {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  color: var(--base);
   background-color: var(--athens-gray);
   border: none;
-  width: 100%;
-  padding: 0px 8px;
-  border-radius: 4px;
-  position: relative;
-  left: -8px;
+  color: var(--base);
+  height: 32px;
+  padding: 6px 16px;
+  font-size: 16px;
+  display: inline-block;
+  width: auto;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 .input-project-selector:after {
@@ -343,8 +342,9 @@ Menu
 }
 
 .menu-input input {
-  width: 100%;
-  padding: 0;
+  display: block;
+  width: auto;
+  padding: 0 0 0 28px;
   margin: 0;
   height: 32px;
   border-radius: 4px;
@@ -353,9 +353,9 @@ Menu
 }
 
 .menu-input i {
-  position: relative;
-  top: -27px;
-  color: var(--white);
+  position: absolute;
+  top: 15px;
+  left: 15px;
 }
 
 .menu-list {
@@ -372,6 +372,10 @@ Menu
 
 .menu-item > div {
   float: left;
+}
+
+.new-project-suggestion {
+  font-weight: 700;
 }
 
 /* .menu-item > div:last-child {
