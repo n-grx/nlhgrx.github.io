@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "nlhgrx.github.io/static/css/main.0879a870.chunk.css",
+    "main.js": "nlhgrx.github.io/static/js/main.845003b6.chunk.js",
+    "main.js.map": "nlhgrx.github.io/static/js/main.845003b6.chunk.js.map",
+    "runtime-main.js": "nlhgrx.github.io/static/js/runtime-main.4df52f54.js",
+    "runtime-main.js.map": "nlhgrx.github.io/static/js/runtime-main.4df52f54.js.map",
+    "static/js/2.fc947a6f.chunk.js": "nlhgrx.github.io/static/js/2.fc947a6f.chunk.js",
+    "static/js/2.fc947a6f.chunk.js.map": "nlhgrx.github.io/static/js/2.fc947a6f.chunk.js.map",
+    "index.html": "nlhgrx.github.io/index.html",
+    "precache-manifest.463de7ac50f46e27551acaa0319c2ae2.js": "nlhgrx.github.io/precache-manifest.463de7ac50f46e27551acaa0319c2ae2.js",
+    "service-worker.js": "nlhgrx.github.io/service-worker.js",
+    "static/css/main.0879a870.chunk.css.map": "nlhgrx.github.io/static/css/main.0879a870.chunk.css.map",
+    "static/js/2.fc947a6f.chunk.js.LICENSE": "nlhgrx.github.io/static/js/2.fc947a6f.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4df52f54.js",
+    "static/js/2.fc947a6f.chunk.js",
+    "static/css/main.0879a870.chunk.css",
+    "static/js/main.845003b6.chunk.js"
+  ]
+}
