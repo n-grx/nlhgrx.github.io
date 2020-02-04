@@ -1,0 +1,699 @@
+/* ================================
+Utilities
+==================================*/
+
+:root {
+  --base: #191927;
+  --base-lighter: #222230;
+  --base-darker: #151521;
+  --white: #ffffff;
+  --concrete: #8999af;
+  --accent: deeppink;
+  --primary: #3856ff;
+  --athens-gray: #e6eaee;
+  --danger: red;
+
+  /* Spacing */
+  --base-unit: 8px;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */ /* Konqueror HTML */ /* Old versions of Firefox */ /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+.hide {
+  display: none;
+}
+
+.display-block {
+  display: block;
+}
+
+.display-none {
+  display: none;
+}
+
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
+}
+
+.pull-right {
+  right: 0;
+  left: auto;
+}
+
+/* Spacing */
+
+.mt-1 {
+  margin-top: calc(var(--base-unit) * 1);
+}
+.mt-2 {
+  margin-top: calc(var(--base-unit) * 2);
+}
+.mt-3 {
+  margin-top: calc(var(--base-unit) * 3);
+}
+.mt-6 {
+  margin-top: calc(var(--base-unit) * 6);
+}
+.mt-8 {
+  margin-top: calc(var(--base-unit) * 8);
+}
+.mt-16 {
+  margin-top: calc(var(--base-unit) * 16);
+}
+
+.mb-1 {
+  margin-bottom: calc(var(--base-unit) * 1);
+}
+.mb-2 {
+  margin-bottom: calc(var(--base-unit) * 2);
+}
+.mb-3 {
+  margin-bottom: calc(var(--base-unit) * 3);
+}
+.mb-6 {
+  margin-bottom: calc(var(--base-unit) * 6);
+}
+.mb-8 {
+  margin-bottom: calc(var(--base-unit) * 8);
+}
+.mb-16 {
+  margin-bottom: calc(var(--base-unit) * 16);
+}
+
+.ml-1 {
+  margin-left: calc(var(--base-unit) * 1);
+}
+.ml-2 {
+  margin-left: calc(var(--base-unit) * 2);
+}
+.ml-3 {
+  margin-left: calc(var(--base-unit) * 3);
+}
+.ml-6 {
+  margin-left: calc(var(--base-unit) * 6);
+}
+.ml-8 {
+  margin-left: calc(var(--base-unit) * 8);
+}
+
+.mr-1 {
+  margin-right: calc(var(--base-unit) * 1);
+}
+.mr-2 {
+  margin-right: calc(var(--base-unit) * 2);
+}
+.mr-3 {
+  margin-right: calc(var(--base-unit) * 3);
+}
+.mr-6 {
+  margin-right: calc(var(--base-unit) * 6);
+}
+.mr-8 {
+  margin-right: calc(var(--base-unit) * 8);
+}
+
+/* Button styles */
+
+.btn {
+  height: 32px;
+  background-color: var(--concrete);
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: block;
+}
+
+.btn-delete {
+}
+
+.btn-icon {
+  background-color: transparent;
+  border: 2px solid var(--athens-gray);
+}
+
+.btn-icon:hover {
+  color: var(--accent);
+}
+
+.btn-icon i {
+  color: var(--concrete);
+}
+
+.btn-invisible {
+  background-color: transparent;
+  border: none;
+}
+
+.btn-invisible:hover {
+  background-color: var(--athens-gray);
+}
+
+.btn-primary {
+  background-color: transparent;
+  border-radius: 50px;
+  border: 2px solid var(--athens-gray);
+  color: var(--primary);
+  padding: 4px 18px;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border-radius: 50px;
+  border: 2px solid var(--athens-gray);
+  color: var(--concrete);
+  padding: 4px 18px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.fr {
+  float: right;
+}
+
+.btn-icon img {
+  height: 16px;
+  width: auto;
+}
+
+.inline-link {
+  float: right;
+  padding: 0;
+  margin: 0 0 0 0px;
+  text-decoration: underline;
+  color: blue;
+  background-color: white;
+  border: none;
+}
+
+.btn-dropdown {
+  height: 32px;
+  background-color: var(--athens-gray);
+  border-radius: 4px;
+  padding: 0 0 0 8px;
+  line-height: 32px;
+}
+
+.btn:active {
+}
+
+button {
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  /* show a hand cursor on hover; some argue that we
+  should keep the default arrow cursor for buttons */
+  cursor: pointer;
+}
+
+.project-delete {
+  color: var(--danger);
+}
+
+.input-project-selector {
+  background-color: var(--athens-gray);
+  border: none;
+  color: var(--base);
+  height: 32px;
+  padding: 6px 16px;
+  font-size: 16px;
+  display: inline-block;
+  width: auto;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.input-project-selector:after {
+  content: none;
+}
+
+/* ================================
+Structure
+==================================*/
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--base);
+  background-color: var(--white);
+}
+
+.app {
+  display: block;
+  border-radius: 8px;
+}
+
+.header {
+  padding: 128px 64px 0 64px;
+  border-bottom: 1px solid var(--athens-gray);
+  display: flex;
+}
+
+.header > .col-1 {
+  display: flex;
+  flex: 1 auto;
+  justify-content: flex-start;
+}
+.header > .col-2 {
+  display: flex;
+  flex: 1 auto;
+  justify-content: flex-end;
+}
+
+.main {
+  padding: 0 64px;
+}
+
+/* ================================
+Typography
+==================================*/
+
+h1 {
+  font-size: 32px;
+  font-weight: 400;
+  margin: 0 0 24px 0;
+}
+
+/* .header h1 {
+  margin-top: 128px;
+} */
+
+h2 {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin: 0 0 16px 0;
+  color: var(--concrete);
+}
+
+/* ================================
+Add new task input
+==================================*/
+#add-task-input {
+  background-color: var(--athens-gray);
+  border: none;
+  color: var(--base);
+  height: 48px;
+  padding: 0 16px;
+  font-size: 16px;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ================================
+Menu
+==================================*/
+
+.menu-container {
+  min-width: 200px;
+  width: auto;
+  height: auto;
+  background-color: var(--white);
+  padding: 8px 0px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 4px, rgba(0, 0, 0, 0.06) 0px 2px 12px;
+  position: absolute;
+  z-index: 1000;
+  margin-top: 2px;
+  text-align: left;
+  border-radius: 8px;
+}
+
+.menu {
+  overflow: auto;
+  width: auto;
+}
+
+.menu-input {
+  padding: 0px 8px;
+  margin-bottom: 8px;
+}
+
+.menu-input input {
+  display: block;
+  width: auto;
+  padding: 0 0 0 28px;
+  margin: 0;
+  height: 32px;
+  border-radius: 4px;
+  border: none;
+  background-color: var(--athens-gray);
+}
+
+.menu-input i {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.menu-list {
+}
+
+.menu-item-container {
+}
+
+.menu-item {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 8px 0 8px;
+}
+
+.menu-item > div {
+  float: left;
+}
+
+.new-project-suggestion {
+  font-weight: 700;
+}
+
+/* .menu-item > div:last-child {
+  float: right;
+} */
+
+.icon-left {
+  margin-right: 4px;
+  cursor: move;
+}
+.icon-right {
+  display: none;
+  color: var(--danger);
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background-color: var(--athens-gray);
+}
+
+.menu-item:hover .icon-right {
+  display: inline;
+}
+
+.popover-container {
+  display: block;
+}
+
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+/* ================================
+Item task
+==================================*/
+
+.mit-task-container {
+  margin: 0 0 48px 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+.mit-task-container .task-item {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mit-task-container .task-content-project {
+}
+
+.mit-task {
+}
+
+.task-list {
+  margin: 0 0 0 0;
+}
+
+.task-list-container {
+  margin: 0 0 0 0;
+}
+
+.checker {
+  display: inline-block;
+}
+
+.form-radio {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  position: relative;
+  color: #666;
+  top: 0px;
+  height: 18px;
+  width: 18px;
+  border: 1px solid var(--concrete);
+  cursor: pointer;
+  margin-right: 16px;
+  outline: none;
+  top: 5px;
+  padding: 0px;
+}
+
+.form-radio:checked::before {
+  position: absolute;
+  font: 10px 'Open Sans', sans-serif;
+  content: '\02143';
+  transform: rotate(40deg);
+}
+
+.form-radio:hover {
+  background-color: var(--concrete);
+  content: '\02143';
+}
+
+.form-radio:hover::before {
+  position: absolute;
+  font: 10px 'Open Sans', sans-serif;
+  content: '\02143';
+  transform: rotate(40deg);
+}
+
+.form-radio:checked {
+  background-color: #b5e7b1;
+}
+
+/* ================================
+Strikethrough animation
+==================================*/
+
+.strikethrough {
+  display: inline-block;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.strikethrough:after {
+  opacity: 0;
+  content: '';
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 4px;
+  box-shadow: 0 1px rgba(255, 255, 255, 0.6);
+  margin-top: -30px;
+  background: deeppink;
+  transform-origin: left;
+  animation: strikethrough 0.3s 0.25s cubic-bezier(0.55, 0, 0.1, 1) 1;
+  transition: transform 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* Keyframes for initial animation */
+
+@keyframes strikethrough {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 100;
+  }
+}
+
+.task-item {
+  display: flex;
+  border-bottom: 1px solid var(--athens-gray);
+  padding: 0 0 8px 0;
+}
+
+.task-item:last-child {
+  margin-bottom: 48px;
+}
+
+.task-actions > div {
+  display: flex;
+}
+
+.task-details {
+  display: flex;
+  flex-grow: 1;
+}
+
+.task-item-editmode {
+  padding: 8px 0;
+  margin-left: 36px;
+  display: flex;
+}
+
+.inline-task-edit {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--base);
+  background-color: var(--athens-gray);
+  border: none;
+  width: 100%;
+  padding: 0px 8px;
+  border-radius: 4px;
+  position: relative;
+  left: -8px;
+}
+
+.task-actions {
+  display: flex;
+}
+.task-content {
+  display: flex;
+  flex-grow: 1;
+}
+.task-content span {
+  padding: 7px 0 0 0;
+}
+
+.task-content-bottom {
+}
+
+.task-content-age {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgb(0, 0, 0);
+  text-transform: none;
+  padding: 4px 4px;
+  /* background-color: rgba(138, 43, 226, 0.2); */
+  border-radius: 100px;
+  align-self: center;
+}
+
+.task-content-project {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgb(0, 0, 0);
+  text-transform: none;
+  padding: 4px 4px;
+  /* background-color: rgba(138, 43, 226, 0.2); */
+  border-radius: 100px;
+  align-self: center;
+}
+
+.task-action-menu {
+}
+
+/* ================================
+Material Icons
+==================================*/
+.drag-icon-left {
+  margin-right: 4px;
+  cursor: move;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  display: inline-flex;
+  vertical-align: middle;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 {
+  font-size: 18px;
+}
+.material-icons.md-24 {
+  font-size: 24px;
+}
+.material-icons.md-36 {
+  font-size: 36px;
+}
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark {
+  color: rgba(0, 0, 0, 0.54);
+}
+.material-icons.md-dark.md-inactive {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light {
+  color: rgba(255, 255, 255, 1);
+}
+.material-icons.md-light.md-inactive {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ================================
+Modal
+==================================*/
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+.modal-main {
+  position: fixed;
+  background: white;
+  width: 80%;
+  max-width: 500px;
+  height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+
+  z-index: 1000;
+  padding: 48px;
+}
+
+/* ================================
+Nav dropdown
+==================================*/
