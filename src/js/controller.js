@@ -1,138 +1,183 @@
-export function reorderProjects(object) {
-  fetch('http://localhost:5000/api/projects/order ', {
-    method: 'POST',
-    headers: new Headers(),
-    body: JSON.stringify({
-      projects: object
-    })
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ tasks: data[1], projects: data[0] });
-    });
-}
+// Understands the data and talks to the view
+import appModel from './model';
+const model = new appModel();
 
-// Send the new task to the server and update state.tasks with the new task
-export function createTask(task, project) {
-  fetch('http://localhost:5000/api/task/create', {
-    method: 'POST',
-    headers: new Headers(),
-    body: JSON.stringify({
-      projects: project,
-      value: task
-    })
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ tasks: data });
-    });
-  this.setState({
-    taskInputValue: ''
+// Calculate a score based on the tasks age
+let calculateTaskAge = date => {
+  // get the age of the task in days
+  let age = Math.floor((new Date() - new Date(date)) / (1000 * 60 * 60 * 24));
+  let score;
+
+  if (age > 60) {
+    score = 3;
+  } else if (age > 10) {
+    score = 2;
+  } else if (age > 7) {
+    score = 1;
+  } else {
+    score = 0;
+  }
+
+  return score;
+};
+
+// Calculate a score based on the priority of the project
+let calculateProjectScore = (task, projects) => {
+  if (!projects) {
+    return 0;
+  }
+
+  let projectCount = projects.length;
+  let projectScore;
+  let project = task.projects;
+
+  projects.find((item, idx) => {
+    if (item.name === project) {
+      return (projectScore = parseInt(idx, 10));
+    } else {
+      return 0;
+    }
   });
-}
+  return projectCount - projectScore + 1;
+};
 
-// Update task value
-export function updateTaskValue(taskIDX, taskValue) {
-  fetch('http://localhost:5000/api/task/edit/value', {
-    method: 'POST',
-    headers: new Headers(),
-    body: JSON.stringify({
-      taskid: taskIDX,
-      value: taskValue
-    })
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ tasks: data });
+// Calculate the total score for the task
+let calculateTaskScore = (task, projects) => {
+  let score =
+    calculateTaskAge(task.created) + calculateProjectScore(task, projects);
+  return score;
+};
+
+// Order data
+let orderData = (tasks, projects) => {
+  let rawData = [];
+  Object.keys(tasks).map(id => {
+    let task = tasks[id];
+    let totalScore = calculateTaskScore(task, projects);
+    task.score = totalScore;
+    let newData = [task, totalScore];
+    rawData.push(newData);
+  });
+
+  // Sorts the array by the total score 9-1;
+  rawData.sort(function(a, b) {
+    return b[1] - a[1];
+  });
+
+  // Remove the total score int from the array
+  rawData.map(item => {
+    item.pop();
+  });
+  let newArr = [].concat.apply([], rawData);
+  return newArr;
+};
+
+class Controller {
+  getData() {
+    let tasks = model.getDataFromStorage('tasks');
+    let projects = model.getDataFromStorage('projects');
+
+    if (!tasks) {
+      model.addDataToStorage('tasks', {});
+      tasks = model.getDataFromStorage('tasks');
+    }
+
+    if (!projects) {
+      model.addDataToStorage('projects', []);
+      projects = model.getDataFromStorage('projects');
+    }
+    return [orderData(tasks), projects];
+  }
+
+  getTestData = () => {
+    let tasks = {};
+    let projects = [];
+
+    let taskId = 1583928051397;
+
+    // Create dummy projects
+    for (let i = 0; i < 5; i++) {
+      const timeStamp = Date.now();
+      const id = 'id-' + timeStamp;
+      const name = 'Project ' + i;
+      const project = { id: id, name: name };
+      projects.push(project);
+    }
+
+    // create dummy tasks
+    for (let i = 0; i < 20; i++) {
+      const timeStamp = Date.now();
+      const created = new Date(timeStamp);
+      const id = 'id-' + taskId;
+      taskId++;
+
+      tasks[id] = {
+        id: id,
+        value: 'Task ' + i,
+        project: projects[Math.floor(Math.random() * projects.length)].name,
+        created: created
+      };
+    }
+
+    model.addDataToStorage('tasks', tasks);
+    model.addDataToStorage('projects', projects);
+    return [
+      orderData(model.getDataFromStorage('tasks')),
+      model.getDataFromStorage('projects')
+    ];
+  };
+
+  createTask = (task, project) => {
+    // Create a timestamp and ID for the task
+    const timeStamp = Date.now();
+    const id = 'id-' + timeStamp;
+    const created = new Date(timeStamp);
+
+    // Check if the project is new
+    let projects = model.getDataFromStorage('projects');
+    let taskProject = projects.filter(item => {
+      return item.name === project;
     });
+    if (taskProject.length < 1) {
+      let timeStamp = Date.now();
+      let id = 'id-' + timeStamp;
+      taskProject = { name: project, id: id };
+      projects.push(taskProject);
+      model.addDataToStorage('projects', projects);
+    }
+
+    // Add the task to the db
+    model.addTask(id, task, project, created);
+  };
+
+  editTaskValue = (id, value) => {
+    let tasks = model.getDataFromStorage('tasks');
+    let task = tasks[id];
+    task.value = value;
+    model.addDataToStorage('tasks', tasks);
+  };
+
+  editTaskProject = () => {};
+
+  completeTask = id => {
+    let tasks = model.getDataFromStorage('tasks');
+    delete tasks[id];
+    model.addDataToStorage('tasks', tasks);
+  };
+
+  deleteTask = id => {
+    let tasks = model.getDataFromStorage('tasks');
+    delete tasks[id];
+    model.addDataToStorage('tasks', tasks);
+  };
+
+  addProject = () => {};
+  editProject = () => {};
+  deleteProject = () => {};
+
+  reorderProjects = object => {
+    model.addDataToStorage('projects', object);
+  };
 }
 
-// Update task project
-export function updateTaskProject(taskIDX, project) {
-  fetch('http://localhost:5000/api/task/edit/projects', {
-    method: 'POST',
-    headers: new Headers(),
-    body: JSON.stringify({
-      taskid: taskIDX,
-      project: project
-    })
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      const tasks = data[0];
-      const projects = data[1];
-      this.setState({ tasks: tasks, projects: projects });
-    });
-}
-
-// Delete the task from the server
-export function deleteTask(taskId) {
-  fetch('http://localhost:5000/api/task/delete/' + taskId, {
-    method: 'POST',
-    headers: new Headers()
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ tasks: data });
-    });
-}
-
-// Delete project
-export function deleteProject(e) {
-  const projectIDX = e.currentTarget.value;
-
-  fetch('http://localhost:5000/api/projects/delete/' + projectIDX, {
-    method: 'POST',
-    headers: new Headers()
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ tasks: data[0], projects: data[1] });
-    });
-}
-
-// Complete task
-export function completeTask(taskIDX) {
-  fetch('http://localhost:5000/api/task/complete', {
-    method: 'POST',
-    headers: new Headers(),
-    body: JSON.stringify({
-      taskid: taskIDX
-    })
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      if (data.length < 1) {
-        this.setState({ tasks: false });
-      } else {
-        this.setState({ tasks: data });
-      }
-    });
-}
-
-// restore test data
-export function restoretestData() {
-  fetch('http://localhost:5000/api/testdata', {
-    headers: this.state.myHeaders
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      this.setState({ projects: data[0], tasks: data[1] });
-    });
-}
+export default Controller;
