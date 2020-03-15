@@ -148,7 +148,34 @@ class App extends Component {
   // ==================================================
 
   render() {
-    const Header = () => {};
+    let routes = [
+      {
+        path: '/',
+        exact: true,
+        heading: 'Component 1',
+        header: () => <Header title="All Tasks"></Header>,
+        main: () => <Inbox></Inbox>
+      }
+    ];
+
+    const fillProjectRoutes = () => {
+      if (this.state.projects.length < 1) {
+        return;
+      }
+      this.state.projects.map(project => {
+        let route = project.name.replace(/\s+/g, '');
+
+        routes.push({
+          path: '/' + route,
+          exact: true,
+          header: () => <Header title={project.name}></Header>,
+          main: () => <ProjectView project={project.name}></ProjectView>
+        });
+      });
+    };
+
+    fillProjectRoutes();
+
     const renderTask = task => {
       return (
         <Task
@@ -166,6 +193,38 @@ class App extends Component {
       );
     };
 
+    // Component: Header
+    const Header = props => {
+      return (
+        <React.Fragment>
+          <div className="header">
+            <h1>{props.title} </h1>
+            <button
+              className="btn btn-primary mr-2"
+              data-modal={'newTask'}
+              onClick={this.showModal}>
+              New task
+            </button>
+            <Dropdown icon="more_horiz" btnInvisible={false}>
+              <DropdownItem triggerAction={this.restoretestData}>
+                Restore test data
+              </DropdownItem>
+            </Dropdown>
+            <Modal
+              show={this.state.modals.newTask.visible}
+              hide={this.hideModal}
+              heading={'New task'}>
+              <NewTaskModule
+                items={this.state.projects}
+                onCreateTask={this.createTask}
+                onReorderProjects={this.reorderProjects}></NewTaskModule>
+            </Modal>
+          </div>
+        </React.Fragment>
+      );
+    };
+
+    // Component: Inbox
     const Inbox = () => {
       let tasks = [...this.state.tasks];
       let mit;
@@ -200,7 +259,9 @@ class App extends Component {
       }
     };
 
-    const renderProjectView = project => {
+    // Component: Project View
+    const ProjectView = props => {
+      const project = props.project;
       const tasks = [...this.state.tasks];
       const filteredTasks = tasks.filter(task => {
         return task.project === project;
@@ -221,42 +282,35 @@ class App extends Component {
     return (
       <div className={this.state.show ? 'app no-scroll' : 'app'}>
         <Router>
-          <div className="header mb-6">
-            <div className="col-1">
-              <h1 data-modal={'navigation'} onClick={this.showModal}>
-                {this.state.pageTitle}
-              </h1>
-            </div>
+          <div className="sidebar">
             <div className="col-2">
-              <button
-                className="btn btn-primary mr-2"
-                data-modal={'newTask'}
-                onClick={this.showModal}>
-                New task
-              </button>
-              <Dropdown icon="more_horiz" btnInvisible={false}>
-                <DropdownItem triggerAction={this.restoretestData}>
-                  Restore test data
-                </DropdownItem>
-              </Dropdown>
-            </div>
-            <Modal
-              show={this.state.modals.navigation.visible}
-              hide={this.hideModal}
-              heading={'Switch projects'}>
-              <ul>
-                <li>
-                  <Link to={'/'} onClick={this.hideModal}>
-                    All tasks
-                  </Link>
-                </li>
-                <li>
-                  <Link to={'completed'} onClick={this.hideModal}>
-                    Completed
-                  </Link>
-                </li>
-              </ul>
-              <hr></hr>
+              <div className="menu-list mb-3">
+                <div className="menu-item-container">
+                  <div className="menu-item">
+                    <div className="icon-left">
+                      <i className="material-icons md-18">folder</i>
+                    </div>
+                    <div>
+                      <Link to={`/`} onClick={this.hideModal}>
+                        All tasks
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+                <div className="menu-item-container">
+                  <div className="menu-item">
+                    <div className="icon-left">
+                      <i className="material-icons md-18">folder</i>
+                    </div>
+                    <div>
+                      <Link to={`/Component2`} onClick={this.hideModal}>
+                        Component2
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2>Projects</h2>
               <div className="menu-list">
                 {this.state.projects
                   ? this.state.projects.map((project, idx) => (
@@ -270,13 +324,13 @@ class App extends Component {
                           onDragStart={e => this.onDragStart(e, idx)}
                           onDragEnd={this.onDragEnd}>
                           <div className="icon-left">
-                            <i className="material-icons md-18">
-                              drag_indicator
-                            </i>
+                            <i className="material-icons md-18">folder</i>
                           </div>
                           <div>
                             <Link
-                              to={`/${project.name}`}
+                              to={() => {
+                                return '/' + project.name.replace(/\s+/g, '');
+                              }}
                               onClick={this.hideModal}>
                               {project.name}
                             </Link>
@@ -291,39 +345,33 @@ class App extends Component {
                     ))
                   : 'Add a task to create your first project.'}
               </div>
-            </Modal>
-            <Modal
-              show={this.state.modals.newTask.visible}
-              hide={this.hideModal}
-              heading={'New task'}>
-              <NewTaskModule
-                items={this.state.projects}
-                onCreateTask={this.createTask}
-                onReorderProjects={this.reorderProjects}></NewTaskModule>
-            </Modal>
+            </div>
           </div>
-
           <div className="main">
+            {/* Renders the main header based on the pages defined in "routes" */}
             <Switch>
-              {this.state.projects.length < 1
-                ? ''
-                : this.state.projects.map((project, idx) => (
-                    <Route
-                      key={idx}
-                      path={`/${project.name}`}
-                      heading={project.name}>
-                      {renderProjectView(project.name)}
-                    </Route>
-                  ))}
-
-              <Route path="/completed">
-                <h1>Hello</h1>
-              </Route>
-
-              <Route path="/">
-                <Inbox></Inbox>
-              </Route>
+              {routes.map((route, index) => (
+                <Route
+                  key={index}
+                  path={route.path}
+                  exact={route.exact}
+                  children={<route.header />}
+                />
+              ))}
             </Switch>
+            <div className="content">
+              {/* Renders the main component based on the pages defined in "routes" */}
+              <Switch>
+                {routes.map((route, index) => (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    exact={route.exact}
+                    children={<route.main />}
+                  />
+                ))}
+              </Switch>
+            </div>
           </div>
         </Router>
       </div>

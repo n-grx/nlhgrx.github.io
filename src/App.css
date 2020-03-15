@@ -120,6 +120,10 @@ Utilities
 
 /* Button styles */
 
+*:visited {
+  color: var(--base-darker);
+}
+
 .btn {
   height: 32px;
   background-color: var(--concrete);
@@ -250,14 +254,24 @@ body {
 }
 
 .app {
-  display: block;
+  display: table;
   border-radius: 8px;
 }
 
 .header {
-  padding: 128px 64px 0 64px;
+  padding: 64px 64px 16px 64px;
+  margin: 0 0 48px 0;
   border-bottom: 1px solid var(--athens-gray);
   display: flex;
+}
+
+.sidebar {
+  display: table-cell;
+  vertical-align: top;
+  min-width: 144px;
+  position: relative;
+  padding: 64px 24px 0px 24px;
+  border-right: 1px solid var(--athens-gray);
 }
 
 .header > .col-1 {
@@ -272,6 +286,13 @@ body {
 }
 
 .main {
+  display: table-cell;
+  vertical-align: top;
+  width: 100%;
+  padding: 0;
+}
+
+.content {
   padding: 0 64px;
 }
 
@@ -281,8 +302,14 @@ Typography
 
 h1 {
   font-size: 32px;
-  font-weight: 400;
+  font-weight: 700;
   margin: 0 0 24px 0;
+}
+
+h1 span {
+  display: block;
+  font-size: 24px;
+  font-weight: 400;
 }
 
 /* .header h1 {
